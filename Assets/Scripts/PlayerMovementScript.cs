@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovementScript : MonoBehaviour
@@ -29,7 +27,7 @@ public class PlayerMovementScript : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         rb = player.GetComponent<Rigidbody2D>();
         col = player.GetComponent<Collider2D>();
-        direction = 0;
+        direction = 1;
         canDoubleJump = false;
         isGrounded = false;
     }
@@ -53,9 +51,10 @@ public class PlayerMovementScript : MonoBehaviour
                 direction = -1;
                 movementMultiplier = -5f;
             }
-            else if (isGrounded)
+            else
             {
-                direction = 0;
+                // direction = 0;
+                movementMultiplier = 0f;
             }
             rb.velocity = new Vector2(movementMultiplier, rb.velocity.y);
         }
