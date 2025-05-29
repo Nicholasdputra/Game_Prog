@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerMovementScript : MonoBehaviour
 {
+    private GameManagerScript gameManager;
     public GameObject player;
     public Rigidbody2D rb;
 
@@ -10,17 +11,19 @@ public class PlayerMovementScript : MonoBehaviour
 
     public Collider2D col;
     public int direction;
+    public float baseSpeed = 5f;
 
     public bool canMoveUpSlope = true;
     public bool canJump = true;
     public bool canDash = true;
 
+    public float baseDashForce = 20f;
     public bool isDashing;
     private int dashcooldown = 0;
     public static int baseDashCooldown = 5;
 
+    public float baseJumpForce = 5f;
     public bool canDoubleJump;
-    public float doubleJumpCooldownTime = 0.3f;
 
     void Start()
     {
@@ -30,10 +33,13 @@ public class PlayerMovementScript : MonoBehaviour
         direction = 1;
         canDoubleJump = false;
         isGrounded = false;
+        gameManager = GameManagerScript.Instance;
+        Debug.Log("PlayerMovementScript started. GameManager instance: " + gameManager);
     }
 
     void Update()
     {
+        gameManager.playerData.positionInLevel[gameManager.currentLevel] = player.transform.position;
         Vector2 inputVelocity = rb.velocity;
 
         // Only allow movement if not dashing and moving up slope is allowed
@@ -41,21 +47,23 @@ public class PlayerMovementScript : MonoBehaviour
         {
             float moveInput = Input.GetAxisRaw("Horizontal");
             float movementMultiplier = 0f;
+
             if (moveInput > 0)
             {
                 direction = 1;
-                movementMultiplier = 5f;
+                movementMultiplier = baseSpeed;
             }
             else if (moveInput < 0)
             {
                 direction = -1;
-                movementMultiplier = -5f;
+                movementMultiplier = -baseSpeed;
             }
             else
             {
                 // direction = 0;
                 movementMultiplier = 0f;
             }
+
             rb.velocity = new Vector2(movementMultiplier, rb.velocity.y);
         }
 
@@ -86,13 +94,13 @@ public class PlayerMovementScript : MonoBehaviour
             if (canJump && isGrounded)
             {
                 Debug.Log("Jumping from ground or coyote time");
-                rb.AddForce(new Vector2(0, 5), ForceMode2D.Impulse);
+                rb.AddForce(new Vector2(0, baseJumpForce), ForceMode2D.Impulse);
                 canJump = false; // Disable jump until grounded again
             }
             else if (canDoubleJump)
             {
                 Debug.Log("Attempting double jump");
-                rb.AddForce(new Vector2(0, 5), ForceMode2D.Impulse);
+                rb.AddForce(new Vector2(0, baseJumpForce), ForceMode2D.Impulse);
                 canDoubleJump = false;
             }
         }
@@ -104,13 +112,13 @@ public class PlayerMovementScript : MonoBehaviour
             {
                 isDashing = true;
                 Debug.Log("Dashing Right");
-                rb.AddForce(new Vector2(20, 0), ForceMode2D.Impulse);
+                rb.AddForce(new Vector2(baseDashForce, 0), ForceMode2D.Impulse);
             }
             else if (direction == -1 && rb.velocity.x < 0)
             {
                 isDashing = true;
                 Debug.Log("Dashing Left");
-                rb.AddForce(new Vector2(-20, 0), ForceMode2D.Impulse);
+                rb.AddForce(new Vector2(-baseDashForce, 0), ForceMode2D.Impulse);
             }
             StartCoroutine(DashCooldown());
             StartCoroutine(EndDash());
