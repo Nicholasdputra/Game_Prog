@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class GameManagerScript : MonoBehaviour
     public int timer;
 
     public int[] baseTimes = new int[3] { 60, 120, 180 }; // Base times for each level
-
+    
     // UI elements for level select
     public GameObject continueFromSaveButton;
     public GameObject baseStartLevelButton;
@@ -98,9 +99,33 @@ public class GameManagerScript : MonoBehaviour
         Debug.Log("GameManagerScript: Application quitting, saving player data.");
     }
 
-    public void ContinueFromSaveOrNot()
+    public void ContinueFromSaveOrNot(int levelChoice)
     {
-        
+        if (playerData.positionInLevel[levelChoice] != Vector2.zero)
+        {        
+            continueFromSaveButton.SetActive(true); // Show continue button if a save exists
+        }
+        baseStartLevelButton.SetActive(true); // Hide start level button
+        Button newStartButton = baseStartLevelButton.GetComponent<Button>();
+        newStartButton.onClick.AddListener(() => StartLevel(levelChoice));
+    }
+
+    public void GoToLevel1()
+    {
+        SceneManager.LoadScene("Level1");
+        StartLevel(0);
+    }
+
+    public void GoToLevel2()
+    {
+        SceneManager.LoadScene("Level2");
+        StartLevel(1);
+    }
+
+    public void GoToLevel3()
+    {
+        SceneManager.LoadScene("Level3");
+        StartLevel(2);
     }
 
     public void StartLevel(int levelIndex)
@@ -117,15 +142,5 @@ public class GameManagerScript : MonoBehaviour
         timerCoroutine = StartCoroutine(TimerCoroutine()); // Start the timer coroutine
 
         Debug.Log($"Starting level {currentLevel} with timer set to {timer} seconds.");
-    }
-
-    private void DetermineFinalLevelTime()
-    {
-        // Logic to determine the time taken for the current level
-        if (playerData.timeForLevel[currentLevel] < 0)
-        {
-            playerData.timeForLevel[currentLevel] = 0; // Ensure time is not negative
-        }
-        Debug.Log($"Time for level {currentLevel}: {playerData.timeForLevel[currentLevel]} seconds");
     }
 }

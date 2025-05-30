@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerTransformationScript : MonoBehaviour
+public class PlayerFireFormScript : MonoBehaviour
 {
     public GameObject player;
     public PlayerMovementScript playerMovementScript; // Reference to the PlayerMovementScript
@@ -21,10 +21,18 @@ public class PlayerTransformationScript : MonoBehaviour
     void OnEnable()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        fireballHand = player.transform.Find("FireballHand")?.gameObject; // Find the fireball hand in the player's hierarchy
+        fireballHand.SetActive(true); 
         playerMovementScript = player.GetComponent<PlayerMovementScript>();
         canWalkOnFire = true;
         canFireFireball = true;
+        fireballCounter = 0;
+    }
+
+    void OnDisable()
+    {
+        fireballHand.SetActive(false);
+        canWalkOnFire = false;
+        canFireFireball = false;
         fireballCounter = 0;
     }
 
