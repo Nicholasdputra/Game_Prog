@@ -29,7 +29,7 @@ public class GameManagerScript : MonoBehaviour
     {
         if (Instance == null)
         {
-            Debug.Log("GameManagerScript instance created.");
+            // Debug.Log("GameManagerScript instance created.");
             Instance = this;
             DontDestroyOnLoad(gameObject); // Keep this instance across scenes
         }
@@ -96,7 +96,7 @@ public class GameManagerScript : MonoBehaviour
     {
         // Save player data when the application quits
         SaveSystem.currentSave.Save();
-        Debug.Log("GameManagerScript: Application quitting, saving player data.");
+        // Debug.Log("GameManagerScript: Application quitting, saving player data.");
     }
 
     public void ContinueFromSaveOrNot(int levelChoice)

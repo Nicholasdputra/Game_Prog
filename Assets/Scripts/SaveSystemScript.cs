@@ -10,7 +10,7 @@ public class SaveSystem : MonoBehaviour
     {
         if (currentSave == null)
         {
-            Debug.Log("SaveSystem instance created.");
+            // Debug.Log("SaveSystem instance created.");
             currentSave = this;
             DontDestroyOnLoad(gameObject);
             InitializePlayerData();
@@ -36,7 +36,7 @@ public class SaveSystem : MonoBehaviour
     {
         // Ensure the PlayerDataSO is initialized
         string json = JsonUtility.ToJson(currentPlayerData);
-        Debug.Log(json);
+        // Debug.Log(json);
 
         // Save the JSON string to a file
         using (System.IO.StreamWriter writer = new System.IO.StreamWriter(Application.persistentDataPath + "/save.json"))

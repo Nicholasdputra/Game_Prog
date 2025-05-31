@@ -34,7 +34,7 @@ public class PlayerMovementScript : MonoBehaviour
         canDoubleJump = false;
         isGrounded = false;
         gameManager = GameManagerScript.Instance;
-        Debug.Log("PlayerMovementScript started. GameManager instance: " + gameManager);
+        // Debug.Log("PlayerMovementScript started. GameManager instance: " + gameManager);
     }
 
     void Update()
@@ -93,13 +93,13 @@ public class PlayerMovementScript : MonoBehaviour
         {
             if (canJump && isGrounded)
             {
-                Debug.Log("Jumping from ground or coyote time");
+                // Debug.Log("Jumping from ground");
                 rb.AddForce(new Vector2(0, baseJumpForce), ForceMode2D.Impulse);
                 canJump = false; // Disable jump until grounded again
             }
             else if (canDoubleJump)
             {
-                Debug.Log("Attempting double jump");
+                // Debug.Log("Attempting double jump");
                 rb.AddForce(new Vector2(0, baseJumpForce), ForceMode2D.Impulse);
                 canDoubleJump = false;
             }
