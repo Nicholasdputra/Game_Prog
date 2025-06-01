@@ -22,7 +22,7 @@ public class PlayerKnightFormScript : MonoBehaviour
     public int swordDamage = 1;
     public int swordSwingCooldown = 1; // Cooldown time in seconds for sword swing
     public float attackRange = 1.5f; // Range of the sword attack
-
+    
     void OnEnable()
     {
         // Initialize or reset variables when the player enters knight form

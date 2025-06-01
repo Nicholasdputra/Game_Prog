@@ -13,6 +13,9 @@ public class SettingsManager : MonoBehaviour
     bool isFullscreen;
     int currentResolutionIndex;
 
+    public Slider volumeSlider;
+    public AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
