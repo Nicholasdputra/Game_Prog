@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 644478668}
   m_Layer: 6
   m_Name: MeeleEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -258,8 +258,8 @@ Transform:
   m_GameObject: {fileID: 644478665}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -19.28, y: -3.93, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -19.1217, y: -3.7717, z: 0}
+  m_LocalScale: {x: 1.3167, y: 1.3167, z: 1.3167}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -351,13 +351,17 @@ MonoBehaviour:
   health: 0
   rb: {fileID: 0}
   player: {fileID: 0}
+  playerScript: {fileID: 0}
   playerDirection: {x: 0, y: 0}
   rayDistance: 0
+  isChasing: 0
   canChase: 0
   chaseSpeed: 0
   maxChaseDistance: 0
   attackRange: 0
   attackCooldown: 0
+  attackWindUp: 0
+  attackDamage: 0
   waitBeforeReturn: 0
   returnSpeed: 0
   startingPosition: {x: 0, y: 0}
@@ -868,6 +872,7 @@ GameObject:
   - component: {fileID: 2107419975}
   - component: {fileID: 2107419974}
   - component: {fileID: 2107419973}
+  - component: {fileID: 2107419979}
   - component: {fileID: 2107419978}
   m_Layer: 0
   m_Name: Revised_Playable_Chara
@@ -889,8 +894,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  playerKnightFormScript: {fileID: 0}
+  playerFireFormScript: {fileID: 0}
   rb: {fileID: 0}
+  lives: 3
   isGrounded: 0
+  playerForm: 0
   col: {fileID: 0}
   direction: 0
   baseSpeed: 5
@@ -1045,17 +1054,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  playerMovementScript: {fileID: 0}
+  playerScript: {fileID: 0}
   transformationDuration: 5
   canWalkOnFire: 0
   fireballPrefab: {fileID: 8948959785263220858, guid: 67946f45deac1a049988901fba663fdf, type: 3}
   fireballCounter: 0
   maxFireballs: 3
+  fireballDamage: 3
   initialCastSpeed: 20
   fireballCooldown: 3
   fireballBaseTimeToLive: 5
   canFireFireball: 0
   fireballHand: {fileID: 1271245088}
+--- !u!114 &2107419979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107419972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab7fcbf8c0850954caaa380655bc360b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  playerScript: {fileID: 0}
+  canDeflect: 1
+  isDeflecting: 0
+  deflectDuration: 3
+  deflectCooldown: 5
+  canSwingSword: 1
+  swordDamage: 1
+  swordSwingCooldown: 1
+  attackRange: 1.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

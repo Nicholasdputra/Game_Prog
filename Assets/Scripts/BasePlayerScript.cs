@@ -5,10 +5,13 @@ public class BasePlayerScript : MonoBehaviour
 {
     private GameManagerScript gameManager;
     public GameObject player;
+    public PlayerKnightFormScript playerKnightFormScript;
+    public PlayerFireFormScript playerFireFormScript;
     public Rigidbody2D rb;
 
     public int lives = 3; // Player's health
     public bool isGrounded;
+    public int playerForm; // 0 = Knight, 1 = Fire (if i decide to add more forms later, I'll use this to track the current form)
 
     public Collider2D col;
     public int direction;
@@ -31,6 +34,8 @@ public class BasePlayerScript : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         rb = player.GetComponent<Rigidbody2D>();
         col = player.GetComponent<Collider2D>();
+        playerKnightFormScript = player.GetComponent<PlayerKnightFormScript>();
+        playerFireFormScript = player.GetComponent<PlayerFireFormScript>();
         direction = 1;
         canDoubleJump = false;
         isGrounded = false;
@@ -124,6 +129,25 @@ public class BasePlayerScript : MonoBehaviour
             StartCoroutine(DashCooldown());
             StartCoroutine(EndDash());
         }
+
+        // Change Player Form Using Number Keys
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+        {
+            // Switch to Knight Form
+            playerForm = 0; // Knight Form
+            Debug.Log("Switched to Knight Form");
+            playerKnightFormScript.enabled = true;
+            playerFireFormScript.enabled = false;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            // Switch to Fire Form
+            playerForm = 1; // Fire Form
+            Debug.Log("Switched to Fire Form");
+            player.GetComponent<PlayerFireFormScript>().enabled = true;
+            player.GetComponent<PlayerKnightFormScript>().enabled = false;
+        }
+
     }
 
     private IEnumerator EndDash()

@@ -1,9 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SaveSystem : MonoBehaviour
 {
     public static SaveSystem currentSave;
     public PlayerDataSO currentPlayerData;
+    public GameObject meleeEnemyPrefab; // Prefab for melee enemies
+    public GameObject rangedEnemyPrefab; // Prefab for ranged enemies
 
     // Start is called before the first frame update
     void Awake()
@@ -45,6 +48,36 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
+    public void SaveEnemiesForLevel(int levelIndex)
+    {
+        EnemyScript[] allEnemies = FindObjectsOfType<EnemyScript>();
+        List<EnemyData> enemyDataList = new List<EnemyData>();
+        foreach (var enemy in allEnemies)
+        {
+            EnemyData data = new EnemyData();
+            // Detect type by script/component
+            if (enemy.GetComponent<RangedEnemyScript>() != null)
+                data.enemyType = "Ranged";
+            else
+                data.enemyType = "Melee";
+            data.isAlive = enemy.health > 0;
+            data.health = enemy.health;
+            data.position = enemy.transform.position;
+            enemyDataList.Add(data);
+        }
+
+        // Ensure array is initialized and has enough space for the level index
+        if (currentPlayerData.enemiesInLevel == null || currentPlayerData.enemiesInLevel.Length <= levelIndex)
+        {
+            var temp = new List<EnemyData>[levelIndex + 1];
+            if (currentPlayerData.enemiesInLevel != null)
+                currentPlayerData.enemiesInLevel.CopyTo(temp, 0);
+            currentPlayerData.enemiesInLevel = temp;
+        }
+        // Assign the enemy data list to the specific level index
+        currentPlayerData.enemiesInLevel[levelIndex] = enemyDataList;
+    }
+
     void Load()
     {
         // Load the JSON string from a file
@@ -63,6 +96,31 @@ public class SaveSystem : MonoBehaviour
         {
             // Handle the case where the save file does not exist
             Debug.LogError("Save file not found!");
+        }
+    }
+
+    public void LoadEnemiesForLevel(int levelIndex)
+    {
+        // Ensure the PlayerDataSO is initialized and has enemies for the level
+        if (currentPlayerData.enemiesInLevel == null || currentPlayerData.enemiesInLevel.Length <= levelIndex)
+            return;
+
+        // Spawn enemies based on the saved data
+        foreach (var enemyData in currentPlayerData.enemiesInLevel[levelIndex])
+        {
+            if (!enemyData.isAlive)
+                continue; // Skip dead enemies
+
+            GameObject prefab;
+            if (enemyData.enemyType == "Ranged")
+                prefab = rangedEnemyPrefab;
+            else
+                prefab = meleeEnemyPrefab;
+
+            GameObject enemyObj = Instantiate(prefab, enemyData.position, Quaternion.identity);
+            EnemyScript enemyScript = enemyObj.GetComponent<EnemyScript>();
+            enemyScript.health = enemyData.health;
+            // Optionally set other properties
         }
     }
 }

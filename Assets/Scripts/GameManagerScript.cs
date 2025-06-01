@@ -19,11 +19,17 @@ public class GameManagerScript : MonoBehaviour
     public int timer;
 
     public int[] baseTimes = new int[3] { 60, 120, 180 }; // Base times for each level
-    
+
     // UI elements for level select
-    public GameObject continueFromSaveButton;
+    public GameObject baseContinueLevelButton;
     public GameObject baseStartLevelButton;
-    
+
+    public GameObject pausePanel;
+    public GameObject resumeButton;
+    public GameObject backToMainMenuButton;
+    public GameObject settingsButton;
+    public GameObject gameOverPanel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -101,51 +107,60 @@ public class GameManagerScript : MonoBehaviour
     {
         // Save player data when the application quits
         SaveSystem.currentSave.Save();
+        
         // Debug.Log("GameManagerScript: Application quitting, saving player data.");
     }
 
     public void ContinueFromSaveOrNot(int levelChoice)
     {
         if (playerData.positionInLevel[levelChoice] != Vector2.zero)
-        {        
-            continueFromSaveButton.SetActive(true); // Show continue button if a save exists
+        {
+            baseContinueLevelButton.SetActive(true); // Show continue button if a save exists
+            Button continueFromSaveButton = baseContinueLevelButton.GetComponent<Button>();
+            continueFromSaveButton.onClick.AddListener(() => ContinueLevelFromSave(levelChoice));
         }
         baseStartLevelButton.SetActive(true); // Hide start level button
         Button newStartButton = baseStartLevelButton.GetComponent<Button>();
-        newStartButton.onClick.AddListener(() => StartLevel(levelChoice));
+        newStartButton.onClick.AddListener(() => GoToLevelX(levelChoice));
     }
 
-    public void GoToLevel1()
+    public void GoToLevelX(int levelIndex)
     {
-        SceneManager.LoadScene("Level1");
-        StartLevel(0);
+        string sceneName = "Level" + levelIndex;
+        SceneManager.LoadScene("sceneName");
     }
 
-    public void GoToLevel2()
+    public void ContinueLevelFromSave(int levelIndex)
     {
-        SceneManager.LoadScene("Level2");
-        StartLevel(1);
-    }
-
-    public void GoToLevel3()
-    {
-        SceneManager.LoadScene("Level3");
-        StartLevel(2);
-    }
-
-    public void StartLevel(int levelIndex)
-    {
-        currentLevel = levelIndex; // Set the current level
-        isInLevel = true; // Mark that the player is in a level
-        finishedWithLevel = false; // Reset finished state
+        currentLevel = levelIndex;
+        isInLevel = true;
+        finishedWithLevel = false;
         timer = baseTimes[currentLevel] - playerData.timeElapsed[currentLevel];
 
         if (timerCoroutine != null)
-        {
-            StopCoroutine(timerCoroutine); // Stop any existing timer coroutine
-        }
-        timerCoroutine = StartCoroutine(TimerCoroutine()); // Start the timer coroutine
+            StopCoroutine(timerCoroutine);
+
+        timerCoroutine = StartCoroutine(TimerCoroutine());
 
         Debug.Log($"Starting level {currentLevel} with timer set to {timer} seconds.");
+
+        // Change scene based on level index
+        string sceneName = "Level" + levelIndex; // Assumes scenes are named "Level1", "Level2", etc.
+        SceneManager.LoadScene(sceneName);
+
+        // Load enemies after the scene loads
+        StartCoroutine(LoadEnemiesAfterSceneLoad(currentLevel));
+    }
+    
+    private IEnumerator LoadEnemiesAfterSceneLoad(int levelIndex)
+    {
+        // Wait one frame to ensure the scene is loaded
+        yield return null;
+        // destroy all default enemies in the scene here
+        foreach (var enemy in FindObjectsOfType<EnemyScript>())
+            Destroy(enemy.gameObject);
+
+        // Now load enemies from save
+        SaveSystem.currentSave.LoadEnemiesForLevel(levelIndex);
     }
 }

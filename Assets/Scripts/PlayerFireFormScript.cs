@@ -11,6 +11,7 @@ public class PlayerFireFormScript : MonoBehaviour
     public GameObject fireballPrefab; // Prefab for the fireball
     public int fireballCounter;
     public int maxFireballs = 3; // Maximum number of fireballs that can be fired at once
+    public int fireballDamage = 3; // Damage dealt by the fireball
 
     public int initialCastSpeed = 20;
     public int fireballCooldown = 3; // Cooldown time in seconds for firing fireballs

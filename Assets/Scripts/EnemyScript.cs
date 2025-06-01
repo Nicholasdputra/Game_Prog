@@ -81,7 +81,7 @@ public abstract class EnemyScript : MonoBehaviour
         // Debug.Log($"Player detected: {playerDetected}");
         if (Vector2.Distance(transform.position, startingPosition) < maxChaseDistance)
         {
-            canChase = playerDetected;        
+            canChase = playerDetected;
         }
     }
 
@@ -262,5 +262,27 @@ public abstract class EnemyScript : MonoBehaviour
         }
         transform.position = startingPosition; // Reset the enemy's position to the starting point
         canChase = false; // Stop chasing when resetting position
+    }
+    
+    protected void CheckIfDead()
+    {
+        // Check if the enemy's health is less than or equal to zero
+        if (health <= 0)
+        {
+            // Debug.Log("Enemy is dead, destroying game object");
+            Destroy(gameObject); // Destroy the enemy game object
+
+            // if game manager singleton exists, add 100 score
+            GameManagerScript gameManager = GameManagerScript.Instance;
+            if (gameManager != null)
+            {
+                gameManager.playerData.currentScores[gameManager.currentLevel] += 100; // Add score to the player's score
+                Debug.Log("Enemy defeated, score increased by 100. Total score: " + gameManager.playerData.currentScores[gameManager.currentLevel]);
+            }
+            else
+            {
+                Debug.LogWarning("GameManagerScript instance not found, cannot update score.");
+            }
+        }
     }
 }

@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1957aeab213925e48892b3effd1eb3a6, type: 3}
   m_Name: PlayerDataSO
   m_EditorClassIdentifier: 
-  timeForLevel: 00000000
-  scoreForLevel: 00000000
-  starsForLevel: 00000000
-  levelCompleted: 00000000
+  timeLeftAtCompletion: 00000000
+  finalScoreAtCompletion: 00000000
+  timeElapsed: 00000000
+  currentScores: 64000000
+  starsAchieved: 00000000
+  levelCompleted: 000000
   positionInLevel:
-  - {x: 0, y: 0}
+  - {x: -6.3508935, y: -3.4581506}

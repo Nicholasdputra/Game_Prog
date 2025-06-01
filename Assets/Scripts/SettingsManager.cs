@@ -16,15 +16,7 @@ public class SettingsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isFullscreen = true;
-        resolutions = Screen.resolutions;
-
-        List<string> options = new List<string>();
-        for (int i = 0; i < resolutions.Length; i++)
-        {
-            string option = resolutions[i].width + " x " + resolutions[i].height;
-            options.Add(option);
-        }
+        
     }
 
     // Update is called once per frame

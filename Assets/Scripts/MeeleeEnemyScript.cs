@@ -12,9 +12,9 @@ public class MeeleeEnemyScript : EnemyScript
     {
         canChase = false; // Initially not chasing the player
         Initialize();
-        health = 1f; // Health value
+        health = 3f; // Health value
 
-        attackWindUp = 3f; // Time before the attack is executed
+        attackWindUp = 0.5f; // Time before the attack is executed
         attackRange = 1.5f; // Set the attack range for melee attacks
         attackCooldown = 1.5f; // Set the cooldown time between attacks
         attackDamage = 1; // Damage dealt by the enemy's attack
@@ -30,6 +30,7 @@ public class MeeleeEnemyScript : EnemyScript
 
     void Update()
     {
+        CheckIfDead();
         CheckForChase();
         Chase();
         CheckForAttack();

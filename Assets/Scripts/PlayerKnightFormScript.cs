@@ -6,6 +6,7 @@ public class PlayerKnightFormScript : MonoBehaviour
 {
     //To Do:
     //We can maybe adjust the player movement script to allow for a different speed or jump height
+
     public GameObject player;
     public BasePlayerScript playerScript; // Reference to the PlayerMovementScript
     
@@ -36,7 +37,7 @@ public class PlayerKnightFormScript : MonoBehaviour
     void Update()
     {
         // Check for input to trigger sword swing
-        if (Input.GetKeyDown(KeyCode.E)) // Assuming space key is used for sword swing
+        if (Input.GetKeyDown(KeyCode.E) && canSwingSword) // Assuming space key is used for sword swing
         {
             SwordSwing();
         }
@@ -52,28 +53,25 @@ public class PlayerKnightFormScript : MonoBehaviour
     {
         // Implement sword swinging logic here
         // This could involve playing an animation, checking for collisions, etc.
-        Debug.Log("Sword swing action triggered.");
-        if (canSwingSword)
+        canSwingSword = false; // Disable sword swinging until cooldown is over
+        // Perform the sword swing action
+        // For example, check for enemies in range and apply damage
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, attackRange);
+        foreach (Collider2D enemy in hitEnemies)
         {
-            canSwingSword = false; // Disable sword swinging until cooldown is over
-            // Perform the sword swing action
-            // For example, check for enemies in range and apply damage
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, attackRange);
-            foreach (Collider2D enemy in hitEnemies)
+            if (enemy.CompareTag("Enemy"))
             {
-                if (enemy.CompareTag("Enemy"))
-                {
-                    // Apply damage to the enemy
-                    enemy.GetComponent<EnemyScript>().health -= swordDamage;
-                }
+                // Apply damage to the enemy
+                enemy.GetComponent<EnemyScript>().health -= swordDamage;
             }
-
-            SwordSwingCooldown(); // Start the sword swing cooldown coroutine
         }
+        StartCoroutine(SwordSwingCooldown()); // Start the sword swing cooldown coroutine
+
     }
 
     public IEnumerator SwordSwingCooldown()
     {
+        Debug.Log("Sword swing action ended, entering cooldown.");
         canSwingSword = false; // Disable sword swinging, just as a backup for the one in SwordSwing()
         yield return new WaitForSeconds(swordSwingCooldown); // Wait for the cooldown period
         canSwingSword = true; // Re-enable sword swinging
