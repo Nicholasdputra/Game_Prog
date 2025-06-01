@@ -6,7 +6,7 @@ public class SlopeScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerMovementScript playerScript = collision.gameObject.GetComponent<PlayerMovementScript>();
+            BasePlayerScript playerScript = collision.gameObject.GetComponent<BasePlayerScript>();
             if (playerScript != null)
             {
                 // Disable jumping, dashing, and moving up the slope
@@ -21,7 +21,7 @@ public class SlopeScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerMovementScript playerScript = collision.gameObject.GetComponent<PlayerMovementScript>();
+            BasePlayerScript playerScript = collision.gameObject.GetComponent<BasePlayerScript>();
             if (playerScript != null)
             {
                 // Re-enable abilities when leaving the slope

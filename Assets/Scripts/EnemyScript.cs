@@ -10,6 +10,7 @@ public abstract class EnemyScript : MonoBehaviour
 
     // Player-related variables
     public GameObject player; // Reference to the player GameObject
+    public BasePlayerScript playerScript; // Reference to the player's script for accessing player data
     public Vector2 playerDirection; // Direction towards the player
     public float rayDistance; // Distance for raycasting to detect the player
     public bool isChasing = false; // Flag to indicate if the enemy is currently chasing the player
@@ -21,7 +22,9 @@ public abstract class EnemyScript : MonoBehaviour
     public float attackRange; // Range within which the enemy can attack
     public float attackCooldown; // Cooldown time between attacks
     public Coroutine attackCoroutine; // Coroutine for handling attack timing
-    protected abstract IEnumerator PerformAttack();
+    protected abstract IEnumerator PerformAttack(); // Abstract method to be implemented by derived classes for performing the attack
+    public float attackWindUp; // Time before the attack is executed
+    public int attackDamage; // Damage dealt by the enemy's attack
 
     // Chasing-related variables
     public float waitBeforeReturn; // Time to wait before returning to the starting position after chasing
@@ -34,6 +37,7 @@ public abstract class EnemyScript : MonoBehaviour
 
     protected void Initialize()
     {
+        // Initialize the enemy script
         attackCoroutine = null; // Initialize attack coroutine to null
         waitBeforeReturnCoroutine = null; // Initialize wait coroutine to null
         returnCoroutine = null; // Initialize return coroutine to null
@@ -41,14 +45,65 @@ public abstract class EnemyScript : MonoBehaviour
         rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component attached to the enemy
         startingPosition = transform.position; // Set the starting position of the enemy
         player = GameObject.FindGameObjectWithTag("Player"); // Find the player object in the scene
+        playerScript = player.GetComponent<BasePlayerScript>(); // Get the player's script component
         canChase = false; // Initially not chasing the player   
     }
+
+    protected void CheckForChase()
+    {
+        // We need to exclude the Enemy layer from the raycast to avoid detecting other enemies
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+        int mask = ~(1 << enemyLayer); // Exclude Enemy layer
+
+        // Perform a circle overlap to detect the player within the specified ray distance
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, rayDistance);
+        // Debug.Log($"Detected {hits.Length} colliders within {rayDistance} units.");
+        bool playerDetected = false;
+        foreach (var hit in hits)
+        {
+            if (hit.CompareTag("Player"))
+            {
+                // Debug.Log($"Detected collider: {hit.name} with tag {hit.tag}");
+                Vector2 directionToPlayer = (hit.transform.position - transform.position).normalized;
+                float distanceToPlayer = Vector2.Distance(transform.position, hit.transform.position);
+
+                RaycastHit2D rayHit = Physics2D.Raycast(transform.position, directionToPlayer, distanceToPlayer, mask);
+
+                Debug.DrawLine(transform.position, rayHit.point, Color.green);
+                // Debug.Log($"Raycast hit: {rayHit.collider?.name} at distance {rayHit.distance}");
+                if (rayHit.collider != null && rayHit.collider.CompareTag("Player"))
+                {
+                    playerDetected = true;
+                    break; // No need to check further
+                }
+            }
+        }
+        // Debug.Log($"Player detected: {playerDetected}");
+        if (Vector2.Distance(transform.position, startingPosition) < maxChaseDistance)
+        {
+            canChase = playerDetected;        
+        }
+    }
+
+
+    //For debugging purposes, draw a wire sphere in the scene view to visualize the ray distance, only if the object is selected though
+    // void OnDrawGizmosSelected()
+    // {
+    //     Gizmos.color = Color.cyan;
+    //     Gizmos.DrawWireSphere(transform.position, rayDistance);
+    // }
 
     protected void Chase()
     {
         if (canChase && player != null)
         {
             // Debug.Log("Chasing player");
+            // Stop chasing if already in attack range
+            if (Vector2.Distance(transform.position, player.transform.position) <= attackRange)
+            {
+                canChase = false;
+                return;
+            }
             isChasing = true;
 
             // Calculate the direction towards the player and move the enemy towards the player
@@ -169,7 +224,6 @@ public abstract class EnemyScript : MonoBehaviour
         if (isPlayerInRange)
         {
             // If the enemy is within attack range, start the attack coroutine if not already running
-            canChase = false; // Stop chasing when in attack range
             if (waitBeforeReturnCoroutine != null)
             {
                 StopCoroutine(waitBeforeReturnCoroutine);
@@ -185,15 +239,6 @@ public abstract class EnemyScript : MonoBehaviour
             {
                 // Debug.Log("Player is within attack range, starting attack coroutine");
                 attackCoroutine = StartCoroutine(PerformAttack());
-            }
-        }
-        else
-        {
-            // If the enemy is not in attack range, stop the attack coroutine if it is running
-            if (attackCoroutine != null)
-            {
-                StopCoroutine(attackCoroutine);
-                attackCoroutine = null;
             }
         }
     }

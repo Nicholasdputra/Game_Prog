@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerFireFormScript : MonoBehaviour
 {
     public GameObject player;
-    public PlayerMovementScript playerMovementScript; // Reference to the PlayerMovementScript
+    public BasePlayerScript playerScript; // Reference to the PlayerMovementScript
     public int transformationDuration = 5; // Duration in seconds for the transformation
     public bool canWalkOnFire;
 
@@ -22,7 +22,7 @@ public class PlayerFireFormScript : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         fireballHand.SetActive(true); 
-        playerMovementScript = player.GetComponent<PlayerMovementScript>();
+        playerScript = player.GetComponent<BasePlayerScript>();
         canWalkOnFire = true;
         canFireFireball = true;
         fireballCounter = 0;
@@ -38,11 +38,11 @@ public class PlayerFireFormScript : MonoBehaviour
 
     void Update()
     {
-        if (playerMovementScript.direction == -1)
+        if (playerScript.direction == -1)
         {
             fireballHand.transform.localPosition = new Vector2(-0.5f, fireballHand.transform.localPosition.y);
         }
-        else if (playerMovementScript.direction == 1)
+        else if (playerScript.direction == 1)
         {
             fireballHand.transform.localPosition = new Vector2(0.5f, fireballHand.transform.localPosition.y);
         }
@@ -60,7 +60,7 @@ public class PlayerFireFormScript : MonoBehaviour
         {
             GameObject fireball = Instantiate(fireballPrefab, fireballHand.transform.position, Quaternion.identity);
             Rigidbody2D fireballRb = fireball.GetComponent<Rigidbody2D>();
-            fireballRb.velocity = new Vector2(playerMovementScript.direction * initialCastSpeed, 0f);
+            fireballRb.velocity = new Vector2(playerScript.direction * initialCastSpeed, 0f);
             fireballCounter++;
             StartCoroutine(FireballCooldown());
             StartCoroutine(FireballLifetime(fireball));

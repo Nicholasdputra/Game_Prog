@@ -60,8 +60,13 @@ public class GameManagerScript : MonoBehaviour
         {
             // Logic to handle when the player finishes a level
             Debug.Log("Player finished the level.");
-            playerData.timeForLevel[currentLevel] = timer; // Save the time taken for the level
+            playerData.timeLeftAtCompletion[currentLevel] = playerData.timeElapsed[currentLevel]; // Save the time taken for the level
             playerData.levelCompleted[currentLevel] = true; // Mark the level as completed
+            playerData.finalScoreAtCompletion[currentLevel] = playerData.currentScores[currentLevel]; // Save the score for the level
+            playerData.timeElapsed[currentLevel] = 0; // Reset the time elapsed for the next playthrough
+            playerData.currentScores[currentLevel] = 0; // Reset the current score for the next playthrough
+            playerData.positionInLevel[currentLevel] = Vector2.zero; // Reset the player's position in the level
+            Debug.Log($"Level {currentLevel} completed. Time: {playerData.timeLeftAtCompletion[currentLevel]} seconds, Score: {playerData.finalScoreAtCompletion[currentLevel]}");
             isInLevel = false; // Reset in-level state
             finishedWithLevel = false; // Reset finished state
             timer = 0; // Reset timer for next level
@@ -133,7 +138,7 @@ public class GameManagerScript : MonoBehaviour
         currentLevel = levelIndex; // Set the current level
         isInLevel = true; // Mark that the player is in a level
         finishedWithLevel = false; // Reset finished state
-        timer = baseTimes[currentLevel] - playerData.timeForLevel[currentLevel];
+        timer = baseTimes[currentLevel] - playerData.timeElapsed[currentLevel];
 
         if (timerCoroutine != null)
         {

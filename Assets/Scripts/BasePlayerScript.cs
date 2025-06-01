@@ -1,12 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerMovementScript : MonoBehaviour
+public class BasePlayerScript : MonoBehaviour
 {
     private GameManagerScript gameManager;
     public GameObject player;
     public Rigidbody2D rb;
 
+    public int lives = 3; // Player's health
     public bool isGrounded;
 
     public Collider2D col;
