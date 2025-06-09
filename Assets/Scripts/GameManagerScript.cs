@@ -88,7 +88,7 @@ public class GameManagerScript : MonoBehaviour
     {
         foreach (var enemyInfo in wave.enemies)
         {
-            Instantiate(enemyInfo.enemyPrefab, enemyInfo.position, enemyInfo.rotation);
+            Instantiate(enemyInfo.enemy, enemyInfo.position, enemyInfo.rotation);
         }
     }
 

@@ -33,10 +33,9 @@ public class BasePlayerScript : MonoBehaviour
     void Start()
     {
         dashcooldown = baseDashCooldown; // Initialize dash cooldown
-        isGrounded = true;
-        baseSpeed = 3f;
-        baseDashForce = 5f;
-        baseJumpForce = 7f;
+        baseSpeed = 4f;
+        baseDashForce = 7f;
+        baseJumpForce = 6.5f;
         player = GameObject.FindGameObjectWithTag("Player");
         rb = player.GetComponent<Rigidbody2D>();
         col = player.GetComponent<Collider2D>();
@@ -77,26 +76,19 @@ public class BasePlayerScript : MonoBehaviour
 
             rb.velocity = new Vector2(moveInput * baseSpeed, rb.velocity.y);
 
-
-            if (Mathf.Abs(moveInput) < 0.01f && isGrounded)
+            if (Mathf.Abs(rb.velocity.x) > maxSpeed)
             {
-                rb.velocity = new Vector2(0, rb.velocity.y);
+                rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
             }
         }
 
-        // Grounded check using Raycast
-        Vector2 origin = (Vector2)player.transform.position + Vector2.down * (col.bounds.extents.y + 0.05f);
-        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, 0.1f);
-        Debug.DrawRay(origin, Vector2.down * 0.1f, Color.red);
+        // Grounded check using OverlapBox for a wide check
+        Vector2 boxCenter = (Vector2)player.transform.position + Vector2.down * (col.bounds.extents.y + 0.05f);
+        Vector2 boxSize = new Vector2(col.bounds.size.x * 0.9f, 0.1f); // 90% of collider width, 0.1 height
+        Collider2D groundHit = Physics2D.OverlapBox(boxCenter, boxSize, 0f, LayerMask.GetMask("Platforms"));
+        Debug.DrawLine(boxCenter - Vector2.right * boxSize.x / 2, boxCenter + Vector2.right * boxSize.x / 2, Color.green);
 
-        if (hit.collider != null)
-        {
-            isGrounded = true;
-        }
-        else
-        {
-            isGrounded = false;
-        }
+        isGrounded = groundHit != null;
 
         // Only reset canDoubleJump when landing
         if (isGrounded)
@@ -127,6 +119,8 @@ public class BasePlayerScript : MonoBehaviour
         // Dash
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
+            Debug.Log("Attempting to dash");
+            canDash = false; // Disable dashing until cooldown is over
             if (direction == 1 && rb.velocity.x > 0)
             {
                 isDashing = true;
@@ -139,7 +133,6 @@ public class BasePlayerScript : MonoBehaviour
                 Debug.Log("Dashing Left");
                 rb.AddForce(new Vector2(-baseDashForce, 0), ForceMode2D.Impulse);
             }
-            StartCoroutine(DashCooldown(dashcooldown));
             StartCoroutine(EndDash());
         }
 
@@ -167,6 +160,7 @@ public class BasePlayerScript : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
         isDashing = false;
+        StartCoroutine(DashCooldown(dashcooldown));
     }
 
     private IEnumerator DashCooldown(int dashcooldown)

@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8e6a122afcfe174289039b598a8c0e6, type: 3}
   m_Name: WaveList
   m_EditorClassIdentifier: 
-  waves: []
+  waves:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
