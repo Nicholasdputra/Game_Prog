@@ -5,7 +5,6 @@ public class PlayerFireFormScript : MonoBehaviour
 {
     public GameObject player;
     public BasePlayerScript playerScript; // Reference to the PlayerMovementScript
-    public int transformationDuration = 5; // Duration in seconds for the transformation
     public bool canWalkOnFire;
 
     public GameObject fireballPrefab; // Prefab for the fireball
@@ -14,8 +13,9 @@ public class PlayerFireFormScript : MonoBehaviour
     public int fireballDamage = 3; // Damage dealt by the fireball
 
     public int initialCastSpeed = 20;
-    public int fireballCooldown = 3; // Cooldown time in seconds for firing fireballs
-    public int fireballBaseTimeToLive = 5; // Timer to track fireball cooldown
+    public int baseFireballCooldown = 3; // Cooldown time in seconds for firing fireballs
+    public float fireballCooldown = 3f; // Cooldown time in seconds for firing fireballs
+    [SerializeField] private float fireballBaseTimeToLive = 0.5f; // Timer to track fireball cooldown
     public bool canFireFireball; // Flag to check if fireball can be fired
     public GameObject fireballHand;
 
@@ -26,7 +26,7 @@ public class PlayerFireFormScript : MonoBehaviour
         playerScript = player.GetComponent<BasePlayerScript>();
         canWalkOnFire = true;
         canFireFireball = true;
-        fireballCounter = 0;
+        fireballCounter = GameObject.FindGameObjectsWithTag("Fireball").Length; // Count existing fireballs
     }
 
     void OnDisable()
@@ -34,7 +34,6 @@ public class PlayerFireFormScript : MonoBehaviour
         fireballHand.SetActive(false);
         canWalkOnFire = false;
         canFireFireball = false;
-        fireballCounter = 0;
     }
 
     void Update()
@@ -71,8 +70,13 @@ public class PlayerFireFormScript : MonoBehaviour
     public IEnumerator FireballCooldown()
     {
         canFireFireball = false;
-        yield return new WaitForSeconds(fireballCooldown);
+        while (fireballCooldown > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            fireballCooldown--;
+        }
         canFireFireball = true;
+        fireballCooldown = baseFireballCooldown; // Reset cooldown
     }
 
     public IEnumerator FireballLifetime(GameObject fireball)

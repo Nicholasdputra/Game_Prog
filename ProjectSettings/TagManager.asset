@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Slope
   - Enemy
+  - EnemyProjectile
+  - PlayerReflectedProjectile
+  - Fireball
   layers:
   - Default
   - TransparentFX

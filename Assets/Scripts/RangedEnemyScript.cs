@@ -26,7 +26,7 @@ public class RangedEnemyScript : EnemyScript
 
         rayDistance = 10f; // Example ray distance for detecting the player
         chaseSpeed = 4f; // Example chase speed
-        maxChaseDistance = 15f; // Maximum distance to chase the player    
+        maxChaseDistance = 20f; // Maximum distance to chase the player    
     }
 
     // Update is called once per frame
@@ -42,7 +42,7 @@ public class RangedEnemyScript : EnemyScript
     {
         Debug.Log("Performing ranged attack on player");
         yield return new WaitForSeconds(attackWindUp);
-        Debug.Log("Melee attack wind-up complete, executing attack");
+        Debug.Log("Ranged attack wind-up complete, executing attack");
 
         // Perform the ranged attack logic
         FireProjectile();
@@ -53,9 +53,26 @@ public class RangedEnemyScript : EnemyScript
 
     void FireProjectile()
     {
+        Debug.Log("Shooting");
+
+        // Calculate direction from enemy to player (on the X axis only for horizontal shots, or use full vector for aiming)
+        Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
+
+        // Optionally clamp Y if you want to limit vertical angle
+        direction.y = Mathf.Clamp(direction.y, -0.5f, 0.5f);
+        direction = direction.normalized;
+
+        // Instantiate the projectile
         GameObject projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        projectile.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
+
+        // Get the Rigidbody2D
         Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
-        Vector2 direction = (player.transform.position - transform.position).normalized; // Calculate direction towards the player
-        projectileRb.velocity = direction * projectileSpeed; // Set the projectile's velocity
+        
+        // Add force instead of setting velocity (Impulse mode for instant speed)
+        projectileRb.AddForce(direction * projectileSpeed, ForceMode2D.Impulse);
+
+        Debug.Log("Projectile force applied: " + (direction * projectileSpeed));
     }
 }

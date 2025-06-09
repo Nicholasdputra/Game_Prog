@@ -109,11 +109,23 @@ public abstract class EnemyScript : MonoBehaviour
             // Calculate the direction towards the player and move the enemy towards the player
             playerDirection = (player.transform.position - transform.position).normalized;
             // Debug.Log("Player is within chase distance, moving towards player");
-            float newX = rb.position.x + playerDirection.x * chaseSpeed * Time.deltaTime;
-            Vector2 newPos = new Vector2(newX, rb.position.y);
+            Vector2 force = new Vector2(playerDirection.x * chaseSpeed, 0f);
+            rb.AddForce(force, ForceMode2D.Force);
+            float maxSpeed = Mathf.Abs(chaseSpeed); // Or set a separate maxSpeed variable if you want
 
-            rb.MovePosition(newPos);
-            transform.position = new Vector2(newPos.x, newPos.y);
+            // Clamp X velocity and instantly flip direction if needed, but keep Y velocity (gravity)
+            float currentX = rb.velocity.x;
+            float desiredX = playerDirection.x * maxSpeed;
+
+            // If changing direction, snap to desiredX; otherwise, clamp
+            if (Mathf.Abs(currentX) > 0.1f && Mathf.Sign(currentX) != Mathf.Sign(playerDirection.x))
+            {
+                rb.velocity = new Vector2(desiredX, rb.velocity.y);
+            }
+            else
+            {
+                rb.velocity = new Vector2(Mathf.Clamp(currentX, -maxSpeed, maxSpeed), rb.velocity.y);
+            }
 
             // Check if the enemy has reached the maximum chase distance
             if (Vector2.Distance(transform.position, startingPosition) > maxChaseDistance)
@@ -215,7 +227,7 @@ public abstract class EnemyScript : MonoBehaviour
 
     protected void CheckForAttack()
     {
-        // Debug.Log("Checking for attack");
+        Debug.Log("Checking for attack");
         if (player == null) return; // If player is not set, exit
 
         // Check if the enemy can attack the player
@@ -273,11 +285,11 @@ public abstract class EnemyScript : MonoBehaviour
             Destroy(gameObject); // Destroy the enemy game object
 
             // if game manager singleton exists, add 100 score
-            GameManagerScript gameManager = GameManagerScript.Instance;
+            GameManagerScript gameManager = GameManagerScript.instance;
             if (gameManager != null)
             {
-                gameManager.playerData.currentScores[gameManager.currentLevel] += 100; // Add score to the player's score
-                Debug.Log("Enemy defeated, score increased by 100. Total score: " + gameManager.playerData.currentScores[gameManager.currentLevel]);
+                // gameManager.playerData.currentScores[gameManager.currentLevel] += 100; // Add score to the player's score
+                // Debug.Log("Enemy defeated, score increased by 100. Total score: " + gameManager.playerData.currentScores[gameManager.currentLevel]);
             }
             else
             {

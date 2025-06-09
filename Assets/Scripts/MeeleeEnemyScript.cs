@@ -25,7 +25,6 @@ public class MeeleeEnemyScript : EnemyScript
         rayDistance = 10f; // Example ray distance for detecting the player
         chaseSpeed = 2f; // Example chase speed
         maxChaseDistance = 15f; // Maximum distance to chase the player    
-
     }
 
     void Update()
@@ -38,15 +37,16 @@ public class MeeleeEnemyScript : EnemyScript
 
     protected override IEnumerator PerformAttack()
     {
-        Debug.Log("Performing melee attack on player");
+        // Debug.Log("Performing melee attack on player");
         yield return new WaitForSeconds(attackWindUp);
-        Debug.Log("Melee attack wind-up complete, executing attack");
+        // Debug.Log("Melee attack wind-up complete, executing attack");
         // Perform the melee attack logic
         if (player != null && Vector2.Distance(transform.position, player.transform.position) <= attackRange)
         {
             Debug.Log("Player is within attack range, dealing damage.");
             //Since this is a melee attack, we can directly apply damage to the player
             playerScript.lives -= attackDamage;
+            
         }
         else
         {

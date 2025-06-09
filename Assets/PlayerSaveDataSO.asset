@@ -10,13 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1957aeab213925e48892b3effd1eb3a6, type: 3}
-  m_Name: PlayerDataSO
+  m_Name: PlayerSaveDataSO
   m_EditorClassIdentifier: 
-  timeLeftAtCompletion: 00000000
-  finalScoreAtCompletion: 00000000
-  timeElapsed: 00000000
-  currentScores: 64000000
-  starsAchieved: 00000000
-  levelCompleted: 000000
-  positionInLevel:
-  - {x: -6.3508935, y: -3.4581506}
+  score: 0
+  wavesCompleted: 0
+  enemiesDefeated: 0
+  timeSurvived: 0

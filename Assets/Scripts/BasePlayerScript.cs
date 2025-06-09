@@ -15,22 +15,28 @@ public class BasePlayerScript : MonoBehaviour
 
     public Collider2D col;
     public int direction;
-    public float baseSpeed = 5f;
+    [SerializeField] public float baseSpeed;
+    float maxSpeed = 7f; // Set this to your desired max speed
 
     public bool canMoveUpSlope = true;
     public bool canJump = true;
     public bool canDash = true;
 
-    public float baseDashForce = 20f;
+    [SerializeField] public float baseDashForce;
     public bool isDashing;
     private int dashcooldown = 0;
     public static int baseDashCooldown = 5;
 
-    public float baseJumpForce = 5f;
+    [SerializeField] public float baseJumpForce;
     public bool canDoubleJump;
 
     void Start()
     {
+        dashcooldown = baseDashCooldown; // Initialize dash cooldown
+        isGrounded = true;
+        baseSpeed = 3f;
+        baseDashForce = 5f;
+        baseJumpForce = 7f;
         player = GameObject.FindGameObjectWithTag("Player");
         rb = player.GetComponent<Rigidbody2D>();
         col = player.GetComponent<Collider2D>();
@@ -39,13 +45,12 @@ public class BasePlayerScript : MonoBehaviour
         direction = 1;
         canDoubleJump = false;
         isGrounded = false;
-        gameManager = GameManagerScript.Instance;
         // Debug.Log("PlayerMovementScript started. GameManager instance: " + gameManager);
     }
 
     void Update()
     {
-        gameManager.playerData.positionInLevel[gameManager.currentLevel] = player.transform.position;
+        // gameManager.playerData.positionInLevel[gameManager.currentLevel] = player.transform.position;
         Vector2 inputVelocity = rb.velocity;
 
         // Only allow movement if not dashing and moving up slope is allowed
@@ -70,7 +75,13 @@ public class BasePlayerScript : MonoBehaviour
                 movementMultiplier = 0f;
             }
 
-            rb.velocity = new Vector2(movementMultiplier, rb.velocity.y);
+            rb.velocity = new Vector2(moveInput * baseSpeed, rb.velocity.y);
+
+
+            if (Mathf.Abs(moveInput) < 0.01f && isGrounded)
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
         }
 
         // Grounded check using Raycast
@@ -100,12 +111,14 @@ public class BasePlayerScript : MonoBehaviour
             if (canJump && isGrounded)
             {
                 // Debug.Log("Jumping from ground");
+                Debug.Log("Base Jump Force: " + baseJumpForce);
                 rb.AddForce(new Vector2(0, baseJumpForce), ForceMode2D.Impulse);
                 canJump = false; // Disable jump until grounded again
             }
             else if (canDoubleJump)
             {
                 // Debug.Log("Attempting double jump");
+                Debug.Log("Base Jump Force: " + baseJumpForce);
                 rb.AddForce(new Vector2(0, baseJumpForce), ForceMode2D.Impulse);
                 canDoubleJump = false;
             }
@@ -126,7 +139,7 @@ public class BasePlayerScript : MonoBehaviour
                 Debug.Log("Dashing Left");
                 rb.AddForce(new Vector2(-baseDashForce, 0), ForceMode2D.Impulse);
             }
-            StartCoroutine(DashCooldown());
+            StartCoroutine(DashCooldown(dashcooldown));
             StartCoroutine(EndDash());
         }
 
@@ -156,7 +169,7 @@ public class BasePlayerScript : MonoBehaviour
         isDashing = false;
     }
 
-    private IEnumerator DashCooldown()
+    private IEnumerator DashCooldown(int dashcooldown)
     {
         while (dashcooldown > 0)
         {
@@ -166,5 +179,8 @@ public class BasePlayerScript : MonoBehaviour
         }
         canDash = true; // Re-enable dashing after cooldown
         Debug.Log("Dash Ready");
+        dashcooldown = baseDashCooldown; // Reset cooldown
     }
+
+    
 }

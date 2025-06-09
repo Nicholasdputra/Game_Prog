@@ -6,7 +6,6 @@ public class EnemyProjectileScript : MonoBehaviour
 {
     public Coroutine timeToLiveCoroutine; // Coroutine to handle the projectile's behavior
     public float projectileTimeToLive = 5f; // Time in seconds before the projectile is destroyed
-    bool deflected = false; // Flag to check if the projectile has been deflected
 
     void Start()
     {
@@ -14,23 +13,47 @@ public class EnemyProjectileScript : MonoBehaviour
         timeToLiveCoroutine = StartCoroutine(ProjectileTimeToLive());
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag("Player") && !deflected)
+        if
+        (
+            (other.gameObject.CompareTag("EnemyProjectile") && gameObject.CompareTag("EnemyProjectile")) ||
+            (other.gameObject.CompareTag("PlayerReflectedProjectile") && gameObject.CompareTag("PlayerReflectedProjectile")) 
+        )
         {
-            BasePlayerScript playerScript = collision.gameObject.GetComponent<BasePlayerScript>();
-            PlayerKnightFormScript knightFormScript = collision.gameObject.GetComponent<PlayerKnightFormScript>();
+            // Physics2D.IgnoreCollision(GetComponent<Collider2D>(), other.collider);
+            Debug.Log("Projectile collided with another projectile of the same type. Nothing happens.");
+            return; // Ignore collisions between enemy projectiles or player-reflected projectiles
+        }
+
+        // Ignore enemy projectile hitting enemy, or reflected projectile hitting player
+        if
+        (
+            (other.gameObject.CompareTag("Enemy") && gameObject.CompareTag("EnemyProjectile")) ||
+            (other.gameObject.CompareTag("Player") && gameObject.CompareTag("PlayerReflectedProjectile"))
+        )
+        {
+            Debug.Log("Projectile hit its own side. Nothing happens.");
+            return;
+        }
+        else if (other.gameObject.CompareTag("Player"))
+        {
+            BasePlayerScript playerScript = other.gameObject.GetComponent<BasePlayerScript>();
+            PlayerKnightFormScript knightFormScript = other.gameObject.GetComponent<PlayerKnightFormScript>();
             
             if (playerScript != null && knightFormScript != null && knightFormScript.isDeflecting)
             {
                 // If the player is in knight form and deflecting, do not take damage
                 Debug.Log("Player deflected the enemy projectile.");
+                // Change the tag of the projectile to indicate it has been deflected
+                gameObject.tag = "PlayerReflectedProjectile"; // Change the tag to indicate it has been deflected
                 //Reverse the direction of the projectile, and have it check for collision with the enemy
                 Rigidbody2D rb = GetComponent<Rigidbody2D>();
                 if (rb != null)
                 {
-                    rb.velocity = -rb.velocity;
-                    deflected = true; // Set the deflected flag to true
+                    Vector2 temp = rb.velocity; // Store the current velocity
+                    rb.velocity = Vector2.zero; // Stop the projectile
+                    rb.velocity = -temp; // Restore the velocity to reverse direction
                     StopCoroutine(timeToLiveCoroutine); // Stop the time to live coroutine
                     timeToLiveCoroutine = StartCoroutine(ProjectileTimeToLive()); // Restart the coroutine to handle the new projectile behavior
                 }
@@ -40,19 +63,25 @@ public class EnemyProjectileScript : MonoBehaviour
                 // Handle player collision with projectile
                 playerScript.lives -= 1; // Assuming lives is a public variable in BasePlayerScript
                 Debug.Log("Player hit by enemy projectile. Lives left: " + playerScript.lives);
+                Destroy(gameObject); // Destroy the projectile on collision
             }
         }
-        else if (collision.gameObject.CompareTag("Enemy") && deflected)
+        else if (other.gameObject.CompareTag("Enemy") && gameObject.CompareTag("PlayerReflectedProjectile"))
         {
             // Handle collision with enemy
-            EnemyScript enemyScript = collision.gameObject.GetComponent<EnemyScript>();
+            EnemyScript enemyScript = other.gameObject.GetComponent<EnemyScript>();
             if (enemyScript != null)
             {
                 enemyScript.health -= 1; // Assuming health is a public variable in EnemyScript
                 Debug.Log("Enemy hit by projectile. Health left: " + enemyScript.health);
             }
+            Destroy(gameObject); // Destroy the projectile on collision
         }
-        Destroy(gameObject); // Destroy the projectile on collision
+        else
+        {
+            Debug.Log("Projectile collided with an object that is not the player or an enemy.");
+            Destroy(gameObject); // Destroy the projectile on collision with objects
+        }
     }
 
     private IEnumerator ProjectileTimeToLive()

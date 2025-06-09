@@ -63,11 +63,26 @@ public class PlayerKnightFormScript : MonoBehaviour
             {
                 // Apply damage to the enemy
                 enemy.GetComponent<EnemyScript>().health -= swordDamage;
+                if(enemy.GetComponent<SpriteRenderer>() != null && enemy.GetComponent<EnemyScript>().health > 0)
+                {
+                    // Flash the enemy red to indicate hit
+                    StartCoroutine(FlashRed(enemy.GetComponent<SpriteRenderer>()));
+                }
             }
         }
         StartCoroutine(SwordSwingCooldown()); // Start the sword swing cooldown coroutine
 
     }
+
+    // Add this method to PlayerKnightFormScript.cs or EnemyScript.cs
+    private IEnumerator FlashRed(SpriteRenderer spriteRenderer, float duration = 0.1f)
+    {
+        Color originalColor = spriteRenderer.color;
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(duration);
+        spriteRenderer.color = originalColor;
+    }
+
 
     public IEnumerator SwordSwingCooldown()
     {
