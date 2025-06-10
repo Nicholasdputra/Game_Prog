@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4961243305158150}
   - component: {fileID: 212209819078577796}
+  - component: {fileID: 5524966334224417356}
   m_Layer: 0
   m_Name: Medieval_props_free_21
   m_TagString: Untagged
@@ -73,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: -491301333
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300042, guid: ae3918a914038694d852d0bb81f62473, type: 3}
+  m_Sprite: {fileID: 1270300074, guid: 537713746896e52499ee5127460ab549, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -84,3 +85,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5524966334224417356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226778788418928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d7dc2cd31cfff345be027e29c234561, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  torchSprites:
+  - {fileID: 1270300074, guid: 537713746896e52499ee5127460ab549, type: 3}
+  - {fileID: 1203082696, guid: 537713746896e52499ee5127460ab549, type: 3}
+  - {fileID: -986610418, guid: 537713746896e52499ee5127460ab549, type: 3}
+  - {fileID: -1035049156, guid: 537713746896e52499ee5127460ab549, type: 3}
+  - {fileID: 1514455848, guid: 537713746896e52499ee5127460ab549, type: 3}
+  - {fileID: 1205256280, guid: 537713746896e52499ee5127460ab549, type: 3}
+  - {fileID: 712423865, guid: 537713746896e52499ee5127460ab549, type: 3}
+  - {fileID: 120456568, guid: 537713746896e52499ee5127460ab549, type: 3}
+  frameRate: 0.1

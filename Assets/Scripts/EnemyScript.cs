@@ -4,6 +4,8 @@ using System.Collections;
 
 public abstract class EnemyScript : MonoBehaviour
 {
+    public Animator animator; // Reference to the Animator component for animations
+
     // Enemy-related variables
     public float health; // Health of the enemy
     public Rigidbody2D rb; // Reference to the Rigidbody2D component for physics interactions
@@ -95,7 +97,9 @@ public abstract class EnemyScript : MonoBehaviour
 
     protected void Chase()
     {
-        if (canChase && player != null)
+        if (canChase && player != null 
+        && !animator.GetCurrentAnimatorStateInfo(0).IsName("MeeleeSkeletonHurt") 
+        && !animator.GetCurrentAnimatorStateInfo(0).IsName("RangedSkeletonHurt"))
         {
             // Debug.Log("Chasing player");
             // Stop chasing if already in attack range
@@ -151,7 +155,8 @@ public abstract class EnemyScript : MonoBehaviour
         bool playerIsntInRange = Vector2.Distance(transform.position, player.transform.position) > attackRange;
         // Debug.Log("Player is not in attack range: " + playerIsntInRange);
         // If player is not in attack range, start wait coroutine
-        if (playerIsntInRange && isChasing)
+        if (playerIsntInRange && isChasing && !animator.GetCurrentAnimatorStateInfo(0).IsName("MeeleeSkeletonHurt") 
+        && !animator.GetCurrentAnimatorStateInfo(0).IsName("RangedSkeletonHurt"))
         {
             if (waitBeforeReturnCoroutine == null)
             {
@@ -227,13 +232,14 @@ public abstract class EnemyScript : MonoBehaviour
 
     protected void CheckForAttack()
     {
-        Debug.Log("Checking for attack");
+        // Debug.Log("Checking for attack");
         if (player == null) return; // If player is not set, exit
 
         // Check if the enemy can attack the player
         bool isPlayerInRange = Vector2.Distance(transform.position, player.transform.position) <= attackRange;
         // Debug.Log("Checking if player is within attack range: " + isPlayerInRange);
-        if (isPlayerInRange)
+        if (isPlayerInRange && !animator.GetCurrentAnimatorStateInfo(0).IsName("MeeleeSkeletonHurt") 
+        && !animator.GetCurrentAnimatorStateInfo(0).IsName("RangedSkeletonHurt"))
         {
             // If the enemy is within attack range, start the attack coroutine if not already running
             if (waitBeforeReturnCoroutine != null)
@@ -250,6 +256,7 @@ public abstract class EnemyScript : MonoBehaviour
             if (attackCoroutine == null)
             {
                 // Debug.Log("Player is within attack range, starting attack coroutine");
+                animator.SetBool("Attacking", true); // Set the attacking animation state
                 attackCoroutine = StartCoroutine(PerformAttack());
             }
         }
@@ -281,19 +288,45 @@ public abstract class EnemyScript : MonoBehaviour
         // Check if the enemy's health is less than or equal to zero
         if (health <= 0)
         {
-            // Debug.Log("Enemy is dead, destroying game object");
-            Destroy(gameObject); // Destroy the enemy game object
+            StartCoroutine(PlayDeathAnimation());
+        }
+    }
 
-            // if game manager singleton exists, add 100 score
-            GameManagerScript gameManager = GameManagerScript.instance;
-            if (gameManager != null)
+    protected IEnumerator PlayDeathAnimation()
+    {
+        rb.velocity = Vector2.zero; // Stop any movement
+        StopAllCoroutines(); // Stop all coroutines to prevent further actions
+        while (!animator.GetCurrentAnimatorStateInfo(0).IsName("MeeleeSkeletonDeath") &&
+            !animator.GetCurrentAnimatorStateInfo(0).IsName("RangedSkeletonDeath"))
+        {
+            yield return null; // Wait until the death animation state is reached
+        }
+
+        // Now wait until the animation finishes
+        while ((animator.GetCurrentAnimatorStateInfo(0).IsName("MeeleeSkeletonDeath") 
+        || animator.GetCurrentAnimatorStateInfo(0).IsName("RangedSkeletonDeath")) 
+        && animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            yield return null;
+        }
+        Destroy(gameObject);
+    }
+
+    protected void DetermineSpriteDirection()
+    {
+        // Determine the direction of the sprite based on the player's position
+        if (player != null)
+        {
+            Vector2 directionToPlayer = (player.transform.position - transform.position).normalized;
+            if (directionToPlayer.x < 0)
             {
-                // gameManager.playerData.currentScores[gameManager.currentLevel] += 100; // Add score to the player's score
-                // Debug.Log("Enemy defeated, score increased by 100. Total score: " + gameManager.playerData.currentScores[gameManager.currentLevel]);
+                // Player is to the left, flip the sprite
+                GetComponent<SpriteRenderer>().flipX = true;
             }
             else
             {
-                Debug.LogWarning("GameManagerScript instance not found, cannot update score.");
+                // Player is to the right, reset flip
+                GetComponent<SpriteRenderer>().flipX = false;
             }
         }
     }

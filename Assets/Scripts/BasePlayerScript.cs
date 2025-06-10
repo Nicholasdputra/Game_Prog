@@ -1,8 +1,13 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BasePlayerScript : MonoBehaviour
 {
+    public Animator animator; // Reference to the Animator component
+    public RuntimeAnimatorController knightAnimatorController;
+    public RuntimeAnimatorController fireAnimatorController;
+
     private GameManagerScript gameManager;
     public GameObject player;
     public PlayerKnightFormScript playerKnightFormScript;
@@ -29,9 +34,12 @@ public class BasePlayerScript : MonoBehaviour
 
     [SerializeField] public float baseJumpForce;
     public bool canDoubleJump;
+    public SpriteRenderer spriteRenderer;
 
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
         dashcooldown = baseDashCooldown; // Initialize dash cooldown
         baseSpeed = 4f;
         baseDashForce = 7f;
@@ -44,18 +52,23 @@ public class BasePlayerScript : MonoBehaviour
         direction = 1;
         canDoubleJump = false;
         isGrounded = false;
+        SetDefaultCollider(); // Set the default collider size based on the sprite
         // Debug.Log("PlayerMovementScript started. GameManager instance: " + gameManager);
     }
 
     void Update()
     {
+        float moveInput = Input.GetAxisRaw("Horizontal");
+        if (Mathf.Abs(rb.velocity.x) < 0.05f)
+            rb.velocity = new Vector2(0, rb.velocity.y);
+
         // gameManager.playerData.positionInLevel[gameManager.currentLevel] = player.transform.position;
         Vector2 inputVelocity = rb.velocity;
 
         // Only allow movement if not dashing and moving up slope is allowed
         if (!isDashing && canMoveUpSlope)
         {
-            float moveInput = Input.GetAxisRaw("Horizontal");
+            FlipSprite();
             float movementMultiplier = 0f;
 
             if (moveInput > 0)
@@ -82,13 +95,36 @@ public class BasePlayerScript : MonoBehaviour
             }
         }
 
+        if (isGrounded && rb.velocity.y < 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 0);
+        }
+
         // Grounded check using OverlapBox for a wide check
-        Vector2 boxCenter = (Vector2)player.transform.position + Vector2.down * (col.bounds.extents.y + 0.05f);
+        Vector2 boxCenter = new Vector2(col.bounds.center.x, col.bounds.min.y - 0.05f);
         Vector2 boxSize = new Vector2(col.bounds.size.x * 0.9f, 0.1f); // 90% of collider width, 0.1 height
         Collider2D groundHit = Physics2D.OverlapBox(boxCenter, boxSize, 0f, LayerMask.GetMask("Platforms"));
         Debug.DrawLine(boxCenter - Vector2.right * boxSize.x / 2, boxCenter + Vector2.right * boxSize.x / 2, Color.green);
 
         isGrounded = groundHit != null;
+
+        if(rb.velocity.y > 0.1)
+        {
+            animator.SetBool("Jumping", true); // Update animator state
+        }
+        else
+        {
+            animator.SetBool("Jumping", false); // Update animator state
+        }
+
+        if(rb.velocity.y < 0)
+        {
+            animator.SetBool("Falling", true ); // Update animator state
+        }
+        else
+        {
+            animator.SetBool("Falling", false); // Update animator state
+        }
 
         // Only reset canDoubleJump when landing
         if (isGrounded)
@@ -103,14 +139,14 @@ public class BasePlayerScript : MonoBehaviour
             if (canJump && isGrounded)
             {
                 // Debug.Log("Jumping from ground");
-                Debug.Log("Base Jump Force: " + baseJumpForce);
+                // Debug.Log("Base Jump Force: " + baseJumpForce);
                 rb.AddForce(new Vector2(0, baseJumpForce), ForceMode2D.Impulse);
                 canJump = false; // Disable jump until grounded again
             }
             else if (canDoubleJump)
             {
                 // Debug.Log("Attempting double jump");
-                Debug.Log("Base Jump Force: " + baseJumpForce);
+                // Debug.Log("Base Jump Force: " + baseJumpForce);
                 rb.AddForce(new Vector2(0, baseJumpForce), ForceMode2D.Impulse);
                 canDoubleJump = false;
             }
@@ -143,6 +179,7 @@ public class BasePlayerScript : MonoBehaviour
             playerForm = 0; // Knight Form
             Debug.Log("Switched to Knight Form");
             playerKnightFormScript.enabled = true;
+            animator.runtimeAnimatorController = knightAnimatorController;
             playerFireFormScript.enabled = false;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
@@ -151,9 +188,22 @@ public class BasePlayerScript : MonoBehaviour
             playerForm = 1; // Fire Form
             Debug.Log("Switched to Fire Form");
             player.GetComponent<PlayerFireFormScript>().enabled = true;
+            animator.runtimeAnimatorController = fireAnimatorController;
             player.GetComponent<PlayerKnightFormScript>().enabled = false;
         }
 
+    }
+    
+    private void FlipSprite()
+    {
+        if (direction > 0)
+        {
+            spriteRenderer.flipX = false; // Facing right
+        }
+        else if (direction < 0)
+        {
+            spriteRenderer.flipX = true; // Facing left
+        }
     }
 
     private IEnumerator EndDash()
@@ -176,5 +226,15 @@ public class BasePlayerScript : MonoBehaviour
         dashcooldown = baseDashCooldown; // Reset cooldown
     }
 
-    
+    // Add this method to your BasePlayerScript.cs
+    void SetDefaultCollider()
+    {
+        BoxCollider2D box = col as BoxCollider2D;
+        if (box != null && spriteRenderer.sprite != null)
+        {
+            Vector2 spriteSize = spriteRenderer.sprite.bounds.size;
+            box.size = spriteSize; // No scaling, matches sprite exactly
+            box.offset = spriteRenderer.sprite.bounds.center; // Centered
+        }
+    }
 }
