@@ -25,7 +25,6 @@ public abstract class EnemyScript : MonoBehaviour
     public float attackCooldown; // Cooldown time between attacks
     public Coroutine attackCoroutine; // Coroutine for handling attack timing
     protected abstract IEnumerator PerformAttack(); // Abstract method to be implemented by derived classes for performing the attack
-    public float attackWindUp; // Time before the attack is executed
     public int attackDamage; // Damage dealt by the enemy's attack
 
     // Chasing-related variables
@@ -66,8 +65,11 @@ public abstract class EnemyScript : MonoBehaviour
             if (hit.CompareTag("Player"))
             {
                 // Debug.Log($"Detected collider: {hit.name} with tag {hit.tag}");
-                Vector2 directionToPlayer = (hit.transform.position - transform.position).normalized;
-                float distanceToPlayer = Vector2.Distance(transform.position, hit.transform.position);
+                Collider2D playerCol = hit.GetComponent<Collider2D>();
+                Vector2 playerTarget = playerCol != null ? playerCol.bounds.center : hit.transform.position;
+
+                Vector2 directionToPlayer = (playerTarget - (Vector2)transform.position).normalized;
+                float distanceToPlayer = Vector2.Distance(transform.position, playerTarget);
 
                 RaycastHit2D rayHit = Physics2D.Raycast(transform.position, directionToPlayer, distanceToPlayer, mask);
 
@@ -294,6 +296,7 @@ public abstract class EnemyScript : MonoBehaviour
 
     protected IEnumerator PlayDeathAnimation()
     {
+        Debug.Log("Enemy is dead, playing death animation");
         rb.velocity = Vector2.zero; // Stop any movement
         StopAllCoroutines(); // Stop all coroutines to prevent further actions
         while (!animator.GetCurrentAnimatorStateInfo(0).IsName("MeeleeSkeletonDeath") &&

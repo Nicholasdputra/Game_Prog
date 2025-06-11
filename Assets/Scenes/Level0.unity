@@ -41896,8 +41896,35 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
   m_PrefabInstance: {fileID: 3145590819065062147}
   m_PrefabAsset: {fileID: 0}
---- !u!60 &563669821
-PolygonCollider2D:
+--- !u!50 &563669822
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563669817}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 6
+--- !u!61 &563669823
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -41928,52 +41955,40 @@ PolygonCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.0106191635, y: -0.10346562}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 0.8828125}
+    oldSize: {x: 2, y: 2}
     newSize: {x: 1, y: 0.8828125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.25, y: 0.43359375}
-      - {x: -0.5, y: 0}
-      - {x: -0.25, y: -0.43359375}
-      - {x: 0.25, y: -0.43359375}
-      - {x: 0.5, y: 0}
-      - {x: 0.25, y: 0.43359375}
-  m_UseDelaunayMesh: 0
---- !u!50 &563669822
-Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 2
+  m_Size: {x: 1.1592731, y: 1.4208399}
+  m_EdgeRadius: 0
+--- !u!95 &563669824
+Animator:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 563669817}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 6
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 734df7ea431135a4a88e7ec07453eb2f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &567932371
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52265,11 +52280,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3711261427575780242, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16.897
+      value: 18.098
       objectReference: {fileID: 0}
     - target: {fileID: 3711261427575780242, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.549
+      value: -3.191
       objectReference: {fileID: 0}
     - target: {fileID: 3711261427575780242, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -52308,6 +52323,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2397693407663650156, guid: 4e6733b8749c0674dbc7d05263418c33, type: 3}
     - target: {fileID: 7515469811025166279, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -553466853, guid: d1e92e1ecd2842742a06af58fb9d14bd, type: 3}
+    - target: {fileID: 7515469811025166279, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
       propertyPath: m_SortingLayer
       value: 4
       objectReference: {fileID: 0}
@@ -52324,7 +52343,10 @@ PrefabInstance:
       addedObject: {fileID: 563669822}
     - targetCorrespondingSourceObject: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 563669821}
+      addedObject: {fileID: 563669824}
+    - targetCorrespondingSourceObject: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 563669823}
   m_SourcePrefab: {fileID: 100100000, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
 --- !u!1001 &3423612312190526194
 PrefabInstance:

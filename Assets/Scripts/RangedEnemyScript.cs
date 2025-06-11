@@ -12,13 +12,13 @@ public class RangedEnemyScript : EnemyScript
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         canChase = false; // Initially not chasing the player
         Initialize();
         health = 1f; // Health value
 
-        attackWindUp = 1f; // Time before the attack is executed
         attackRange = 10f; // Set the attack range for ranged attacks
-        attackCooldown = 1f; // Set the cooldown time between attacks
+        attackCooldown = 3f; // Set the cooldown time between attacks
         attackDamage = 1; // Damage dealt by the enemy's attack
 
         returnSpeed = 1f; // Speed at which the enemy returns to its starting position
@@ -32,22 +32,34 @@ public class RangedEnemyScript : EnemyScript
     // Update is called once per frame
     void Update()
     {
+        //set health in animator to health value
+        animator.SetInteger("Health", (int)health);
+        animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x)); // Set the speed parameter for the animator
+        DetermineSpriteDirection();
         CheckIfDead();
-        CheckForChase();
-        Chase();
-        CheckForAttack();
+        if(health > 0){
+            CheckForChase();
+            Chase();
+            CheckForAttack();
+        }
     }
 
     protected override IEnumerator PerformAttack()
     {
-        Debug.Log("Performing ranged attack on player");
-        yield return new WaitForSeconds(attackWindUp);
-        Debug.Log("Ranged attack wind-up complete, executing attack");
+        // Debug.Log("Performing attack on player");
+        while (!animator.GetCurrentAnimatorStateInfo(0).IsName("RangedSkeletonAttack"))
+        {
+            yield return null;
+        }
 
-        // Perform the ranged attack logic
+        yield return new WaitForSeconds(1.05f);
+
+        // Now perform the attack
+        // Debug.Log("Performing ranged attack on player at frame 66");
         FireProjectile();
+        yield return new WaitForSeconds(0.45f);
+        animator.SetBool("Attacking", false);
         yield return new WaitForSeconds(attackCooldown); // Wait for the cooldown before the next attack
-
         attackCoroutine = null; // Reset the attack coroutine
     }
 
@@ -56,7 +68,10 @@ public class RangedEnemyScript : EnemyScript
         Debug.Log("Shooting");
 
         // Calculate direction from enemy to player (on the X axis only for horizontal shots, or use full vector for aiming)
-        Vector2 direction = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
+        Collider2D playerCol = player.GetComponent<Collider2D>();
+        Vector2 targetPos = playerCol != null ? playerCol.bounds.center : (Vector2)player.transform.position;
+
+        Vector2 direction = (targetPos - (Vector2)transform.position).normalized;
 
         // Optionally clamp Y if you want to limit vertical angle
         direction.y = Mathf.Clamp(direction.y, -0.5f, 0.5f);

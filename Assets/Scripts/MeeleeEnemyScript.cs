@@ -15,7 +15,6 @@ public class MeeleeEnemyScript : EnemyScript
         Initialize();
         health = 3f; // Health value
 
-        attackWindUp = 0.5f; // Time before the attack is executed
         attackRange = 1.5f; // Set the attack range for melee attacks
         attackCooldown = 1.5f; // Set the cooldown time between attacks
         attackDamage = 1; // Damage dealt by the enemy's attack
