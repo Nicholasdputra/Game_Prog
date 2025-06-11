@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: PlayerSaveDataSO
   m_EditorClassIdentifier: 
   score: 0
-  wavesCompleted: 0
+  wavesCompleted: 1
   enemiesDefeated: 0
   timeSurvived: 0

@@ -61,7 +61,10 @@ public class EnemyProjectileScript : MonoBehaviour
             {
                 // Handle player collision with projectile
                 playerScript.lives -= 1; // Assuming lives is a public variable in BasePlayerScript
-                playerScript.animator.SetTrigger("Hurt");
+                if (playerScript.playerForm == 0)
+                {
+                    playerScript.animator.SetTrigger("Hurt");
+                }
                 Debug.Log("Player hit by enemy projectile. Lives left: " + playerScript.lives);
                 AudioManager.instance.PlaySoundEffect(AudioManager.instance.hitSound); // Play hit sound effect
                 Destroy(gameObject); // Destroy the projectile on collision

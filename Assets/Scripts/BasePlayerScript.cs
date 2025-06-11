@@ -39,7 +39,7 @@ public class BasePlayerScript : MonoBehaviour
     [SerializeField] public float baseJumpForce;
     public bool canDoubleJump;
     public SpriteRenderer spriteRenderer;
-
+    public GameObject thirdFrame;
 
     void Start()
     {
@@ -209,6 +209,7 @@ public class BasePlayerScript : MonoBehaviour
         // Change Player Form Using Number Keys
         if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1) && playerForm != 0)
         {
+            thirdFrame.SetActive(true); 
             // Switch to Knight Form
             playerForm = 0; // Knight Form
             Debug.Log("Switched to Knight Form");
@@ -220,6 +221,7 @@ public class BasePlayerScript : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2) && playerForm != 1)
         {
+            thirdFrame.SetActive(false); 
             // Switch to Fire Form
             playerForm = 1; // Fire Form
             Debug.Log("Switched to Fire Form");

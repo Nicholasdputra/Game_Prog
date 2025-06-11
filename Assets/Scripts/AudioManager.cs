@@ -40,24 +40,22 @@ public class AudioManager : MonoBehaviour
     public AudioClip nextWaveSound; // Sound effect for next wave
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        if(SceneManager.GetActiveScene().name == "MainMenu")
-        {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "MainMenu")
             PlayBackgroundMusic(mainMenuMusic);
-        }
-        else if(SceneManager.GetActiveScene().name == "Level")
-        {
-            PlayBackgroundMusic(levelMusic);
-        }
-        else if(SceneManager.GetActiveScene().name == "GameOver")
-        {
-            PlayBackgroundMusic(gameOverMusic);
-        }
-        else if(SceneManager.GetActiveScene().name == "Victory")
-        {
-            PlayBackgroundMusic(victoryMusic);
-        }
+        else if (scene.name == "Level")
+            PlayBackgroundMusic(levelMusic);           
     }
 
     // Method to play background music

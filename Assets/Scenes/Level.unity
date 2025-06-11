@@ -53227,6 +53227,7 @@ MonoBehaviour:
   baseJumpForce: 0
   canDoubleJump: 0
   spriteRenderer: {fileID: 0}
+  thirdFrame: {fileID: 1786146408}
 --- !u!114 &1193837615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57366,9 +57367,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 718788787}
     - target: {fileID: 3929448294932906878, guid: 7632b12fffcec6e4aa62afeefe63f130, type: 3}
+      propertyPath: victoryPanel
+      value: 
+      objectReference: {fileID: 1933497072}
+    - target: {fileID: 3929448294932906878, guid: 7632b12fffcec6e4aa62afeefe63f130, type: 3}
       propertyPath: gameOverPanel
       value: 
       objectReference: {fileID: 442192898}
+    - target: {fileID: 3929448294932906878, guid: 7632b12fffcec6e4aa62afeefe63f130, type: 3}
+      propertyPath: victoryScoreText
+      value: 
+      objectReference: {fileID: 171600057}
+    - target: {fileID: 3929448294932906878, guid: 7632b12fffcec6e4aa62afeefe63f130, type: 3}
+      propertyPath: victoryTimerText
+      value: 
+      objectReference: {fileID: 2112270172}
+    - target: {fileID: 3929448294932906878, guid: 7632b12fffcec6e4aa62afeefe63f130, type: 3}
+      propertyPath: victoryWavesText
+      value: 
+      objectReference: {fileID: 1583004481}
     - target: {fileID: 3929448294932906878, guid: 7632b12fffcec6e4aa62afeefe63f130, type: 3}
       propertyPath: gameOverScoreText
       value: 
@@ -57381,6 +57398,10 @@ PrefabInstance:
       propertyPath: gameOverWavesText
       value: 
       objectReference: {fileID: 1924087086}
+    - target: {fileID: 3929448294932906878, guid: 7632b12fffcec6e4aa62afeefe63f130, type: 3}
+      propertyPath: victoryEnemiesDefeatedText
+      value: 
+      objectReference: {fileID: 859550334}
     - target: {fileID: 3929448294932906878, guid: 7632b12fffcec6e4aa62afeefe63f130, type: 3}
       propertyPath: gameOverEnemiesDefeatedText
       value: 
