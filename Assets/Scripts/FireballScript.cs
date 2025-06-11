@@ -65,6 +65,10 @@ public class FireballScript : MonoBehaviour
                 Debug.Log("Script isnt null, applying damage.");
                 // Handle player collision with fireball
                 enemyScript.health -= damage; // Assuming TakeDamage is a method in BasePlayerScript
+                if (enemyScript.health > 0)
+                {
+                    enemyScript.animator.SetTrigger("Hurt"); // Trigger the hurt animation
+                }
             }
         }
 

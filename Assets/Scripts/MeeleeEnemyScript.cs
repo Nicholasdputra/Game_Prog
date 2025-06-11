@@ -7,7 +7,7 @@ using UnityEngine;
 public class MeeleeEnemyScript : EnemyScript
 {
     // MeeleeEnemyScript inherits from EnemyScript and implements specific behavior for a melee enemy
-   
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -24,7 +24,9 @@ public class MeeleeEnemyScript : EnemyScript
 
         rayDistance = 10f; // Example ray distance for detecting the player
         chaseSpeed = 2f; // Example chase speed
-        maxChaseDistance = 15f; // Maximum distance to chase the player    
+        maxChaseDistance = 15f; // Maximum distance to chase the player  
+
+        scoreGain = 300;  
     }
 
     void Update()
@@ -32,9 +34,9 @@ public class MeeleeEnemyScript : EnemyScript
         //set health in animator to health value
         animator.SetInteger("Health", (int)health);
         animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x)); // Set the speed parameter for the animator
-        DetermineSpriteDirection();
         CheckIfDead();
         if(health > 0){
+            DetermineSpriteDirection();
             CheckForChase();
             Chase();
             CheckForAttack();
@@ -61,6 +63,7 @@ public class MeeleeEnemyScript : EnemyScript
         if (player != null && Vector2.Distance(transform.position, player.transform.position) <= attackRange)
         {
             Debug.Log("Player is within attack range, dealing damage.");
+            playerScript.animator.SetTrigger("Hurt"); // Trigger the hit animation on the player
             //Since this is a melee attack, we can directly apply damage to the player
             playerScript.lives -= attackDamage;
         }

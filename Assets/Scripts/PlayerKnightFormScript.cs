@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerKnightFormScript : MonoBehaviour
 {
+    public GameObject shieldIcon;
     public GameObject player;
     public BasePlayerScript playerScript; // Reference to the PlayerMovementScript
     public Animator animator;
@@ -50,13 +52,16 @@ public class PlayerKnightFormScript : MonoBehaviour
         {
             animator.SetBool("Attacking", false); // Reset the attacking animation state
             animator.SetBool("Deflecting", true); // Set the deflecting animation state
+            shieldIcon.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.5f);
             isDeflecting = true;
             canSwingSword = false; // Disable sword swinging while deflecting
         } 
         else
         {
             animator.SetBool("Deflecting", false); // Reset the deflecting animation state
-            if(swordSwingCoroutine == null)
+            
+            shieldIcon.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+            if (swordSwingCoroutine == null)
             {
                 canSwingSword = true; // Disable sword swinging while deflecting    
             }

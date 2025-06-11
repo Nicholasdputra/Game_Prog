@@ -36,6 +36,9 @@ public abstract class EnemyScript : MonoBehaviour
     public Coroutine returnCoroutine; // Coroutine for returning to the starting position
     public Vector2 startingPosition; // Starting position of the enemy
 
+    public Coroutine deathCoroutine; // Coroutine for handling enemy death
+    public int scoreGain; // Score gained when the enemy is defeated
+
     protected void Initialize()
     {
         // Initialize the enemy script
@@ -288,9 +291,11 @@ public abstract class EnemyScript : MonoBehaviour
     protected void CheckIfDead()
     {
         // Check if the enemy's health is less than or equal to zero
-        if (health <= 0)
+        if (health <= 0 && deathCoroutine == null)
         {
-            StartCoroutine(PlayDeathAnimation());
+            StopAllCoroutines(); // Stop all coroutines to prevent further actions
+            GameManagerScript.instance.score += scoreGain;
+            deathCoroutine = StartCoroutine(PlayDeathAnimation());
         }
     }
 
@@ -298,7 +303,7 @@ public abstract class EnemyScript : MonoBehaviour
     {
         Debug.Log("Enemy is dead, playing death animation");
         rb.velocity = Vector2.zero; // Stop any movement
-        StopAllCoroutines(); // Stop all coroutines to prevent further actions
+        
         while (!animator.GetCurrentAnimatorStateInfo(0).IsName("MeeleeSkeletonDeath") &&
             !animator.GetCurrentAnimatorStateInfo(0).IsName("RangedSkeletonDeath"))
         {

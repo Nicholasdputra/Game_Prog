@@ -21,7 +21,6 @@ public class EnemyProjectileScript : MonoBehaviour
             (other.gameObject.CompareTag("PlayerReflectedProjectile") && gameObject.CompareTag("PlayerReflectedProjectile")) 
         )
         {
-            // Physics2D.IgnoreCollision(GetComponent<Collider2D>(), other.collider);
             Debug.Log("Projectile collided with another projectile of the same type. Nothing happens.");
             return; // Ignore collisions between enemy projectiles or player-reflected projectiles
         }
@@ -62,6 +61,7 @@ public class EnemyProjectileScript : MonoBehaviour
             {
                 // Handle player collision with projectile
                 playerScript.lives -= 1; // Assuming lives is a public variable in BasePlayerScript
+                playerScript.animator.SetTrigger("Hurt");
                 Debug.Log("Player hit by enemy projectile. Lives left: " + playerScript.lives);
                 Destroy(gameObject); // Destroy the projectile on collision
             }
@@ -73,6 +73,11 @@ public class EnemyProjectileScript : MonoBehaviour
             if (enemyScript != null)
             {
                 enemyScript.health -= 1; // Assuming health is a public variable in EnemyScript
+                if (enemyScript.health > 0)
+                {
+                    enemyScript.animator.SetTrigger("Hurt"); // Trigger the hurt animation
+                }
+                
                 Debug.Log("Enemy hit by projectile. Health left: " + enemyScript.health);
             }
             Destroy(gameObject); // Destroy the projectile on collision

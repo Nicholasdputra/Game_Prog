@@ -27,6 +27,8 @@ public class RangedEnemyScript : EnemyScript
         rayDistance = 10f; // Example ray distance for detecting the player
         chaseSpeed = 4f; // Example chase speed
         maxChaseDistance = 20f; // Maximum distance to chase the player    
+
+        scoreGain = 100;
     }
 
     // Update is called once per frame
@@ -35,9 +37,9 @@ public class RangedEnemyScript : EnemyScript
         //set health in animator to health value
         animator.SetInteger("Health", (int)health);
         animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x)); // Set the speed parameter for the animator
-        DetermineSpriteDirection();
         CheckIfDead();
         if(health > 0){
+            DetermineSpriteDirection();
             CheckForChase();
             Chase();
             CheckForAttack();

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class BasePlayerScript : MonoBehaviour
 {
@@ -25,9 +27,11 @@ public class BasePlayerScript : MonoBehaviour
 
     public bool canMoveUpSlope = true;
     public bool canJump = true;
-    public bool canDash = true;
+    public Image doubleJumpIcon; // UI Image for the ability
 
     [SerializeField] public float baseDashForce;
+    public bool canDash = true;
+    public Image dashIcon; // UI Image for Ability 1
     public bool isDashing;
     private int dashcooldown = 0;
     public static int baseDashCooldown = 5;
@@ -35,6 +39,7 @@ public class BasePlayerScript : MonoBehaviour
     [SerializeField] public float baseJumpForce;
     public bool canDoubleJump;
     public SpriteRenderer spriteRenderer;
+
 
     void Start()
     {
@@ -53,6 +58,7 @@ public class BasePlayerScript : MonoBehaviour
         canDoubleJump = false;
         isGrounded = false;
         SetDefaultCollider(); // Set the default collider size based on the sprite
+        dashIcon.fillAmount = 0f; 
         // Debug.Log("PlayerMovementScript started. GameManager instance: " + gameManager);
     }
 
@@ -94,6 +100,7 @@ public class BasePlayerScript : MonoBehaviour
                 rb.velocity = new Vector2(Mathf.Sign(rb.velocity.x) * maxSpeed, rb.velocity.y);
             }
         }
+        animator.SetFloat("Speed", Mathf.Abs(rb.velocity.x)); // Set the speed parameter for the animator
 
         if (isGrounded && rb.velocity.y < 0)
         {
@@ -108,7 +115,7 @@ public class BasePlayerScript : MonoBehaviour
 
         isGrounded = groundHit != null;
 
-        if(rb.velocity.y > 0.1)
+        if (rb.velocity.y > 0.1)
         {
             animator.SetBool("Jumping", true); // Update animator state
         }
@@ -117,9 +124,9 @@ public class BasePlayerScript : MonoBehaviour
             animator.SetBool("Jumping", false); // Update animator state
         }
 
-        if(rb.velocity.y < 0)
+        if (rb.velocity.y < 0)
         {
-            animator.SetBool("Falling", true ); // Update animator state
+            animator.SetBool("Falling", true); // Update animator state
         }
         else
         {
@@ -152,11 +159,22 @@ public class BasePlayerScript : MonoBehaviour
             }
         }
 
+        if (!canDoubleJump)
+        {
+            doubleJumpIcon.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.5f);
+        }
+        else
+        {            
+            doubleJumpIcon.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+        }
+
         // Dash
         if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
             Debug.Log("Attempting to dash");
             canDash = false; // Disable dashing until cooldown is over
+            dashIcon.fillAmount = 1f; // Reset the ability image fill amount
+
             if (direction == 1 && rb.velocity.x > 0)
             {
                 isDashing = true;
@@ -172,28 +190,39 @@ public class BasePlayerScript : MonoBehaviour
             StartCoroutine(EndDash());
         }
 
+        if (!canDash)
+        {
+            dashIcon.fillAmount -= Time.deltaTime / baseDashCooldown; // Gradually decrease fill amount
+            if (dashIcon.fillAmount <= 0f)
+            {
+                dashIcon.fillAmount = 0f;
+            }
+        }
+
         // Change Player Form Using Number Keys
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1) && playerForm != 0)
         {
             // Switch to Knight Form
             playerForm = 0; // Knight Form
             Debug.Log("Switched to Knight Form");
             playerKnightFormScript.enabled = true;
+            playerKnightFormScript.shieldIcon.SetActive(true); // Enable shield icon
             animator.runtimeAnimatorController = knightAnimatorController;
             playerFireFormScript.enabled = false;
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2) && playerForm != 1)
         {
             // Switch to Fire Form
             playerForm = 1; // Fire Form
             Debug.Log("Switched to Fire Form");
             player.GetComponent<PlayerFireFormScript>().enabled = true;
             animator.runtimeAnimatorController = fireAnimatorController;
+            playerKnightFormScript.shieldIcon.SetActive(false);
             player.GetComponent<PlayerKnightFormScript>().enabled = false;
         }
 
     }
-    
+
     private void FlipSprite()
     {
         if (direction > 0)
