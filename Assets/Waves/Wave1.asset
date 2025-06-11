@@ -13,12 +13,48 @@ MonoBehaviour:
   m_Name: Wave1
   m_EditorClassIdentifier: 
   enemies:
-  - enemyPrefab: {fileID: 0}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0, w: 0}
-  - enemyPrefab: {fileID: 0}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0, w: 0}
-  - enemyPrefab: {fileID: 0}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0, w: 0}
+  - enemy: {fileID: 7289979731385879098, guid: 1312ec115995199409dd14faf9335889, type: 3}
+    position: {x: 0.2337215, y: 5.975362, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: -25.178253, y: 8.15274, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: -17.591255, y: 5.4711294, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 7289979731385879098, guid: 1312ec115995199409dd14faf9335889, type: 3}
+    position: {x: -24.727633, y: -3.1311994, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: -30.497551, y: 2.1333232, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 7289979731385879098, guid: 1312ec115995199409dd14faf9335889, type: 3}
+    position: {x: 27.033163, y: -3.046969, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: 33.392708, y: 1.8806243, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: 24.187239, y: 7.8768415, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: 17.61792, y: 5.2168727, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: 7.465852, y: 1.6080778, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: -7.545068, y: 1.6080794, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: -10.52148, y: -3.170833, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 7289979731385879098, guid: 1312ec115995199409dd14faf9335889, type: 3}
+    position: {x: -7.291049, y: -3.0594387, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 7289979731385879098, guid: 1312ec115995199409dd14faf9335889, type: 3}
+    position: {x: 8.00709, y: -3.1708345, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+  - enemy: {fileID: 1396431122789278923, guid: 8458cc0358e5b7d439899d1bf2795ac0, type: 3}
+    position: {x: 10.346367, y: -3.0594404, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}

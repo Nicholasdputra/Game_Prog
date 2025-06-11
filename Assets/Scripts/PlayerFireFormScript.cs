@@ -78,6 +78,7 @@ public class PlayerFireFormScript : MonoBehaviour
 
             // Instantiate fireball at the 11th frame
             GameObject fireball = Instantiate(fireballPrefab, fireballHand.transform.position, Quaternion.identity);
+            AudioManager.instance.PlaySoundEffect(AudioManager.instance.fireballSound); // Play fireball sound effect
             Rigidbody2D fireballRb = fireball.GetComponent<Rigidbody2D>();
             fireballRb.velocity = new Vector2(playerScript.direction * initialCastSpeed, 0f);
             fireballCounter++;

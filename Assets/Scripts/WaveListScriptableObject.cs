@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Wave List")]
-public class WaveLiseScriptableObject : ScriptableObject
+public class WaveListScriptableObject : ScriptableObject
 {
     public WaveData[] waves;
 }

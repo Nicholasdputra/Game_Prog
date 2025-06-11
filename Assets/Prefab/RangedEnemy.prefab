@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  health: 0
+  health: 1
   rb: {fileID: 0}
   player: {fileID: 0}
   playerScript: {fileID: 0}
@@ -117,7 +117,8 @@ MonoBehaviour:
   waitBeforeReturn: 0
   returnSpeed: 0
   startingPosition: {x: 0, y: 0}
-  projectilePrefab: {fileID: 2397693407663650156, guid: 4e6733b8749c0674dbc7d05263418c33, type: 3}
+  scoreGain: 0
+  projectilePrefab: {fileID: 8948959785263220858, guid: 7ea403fed92953a4fa97137c18b7f5e5, type: 3}
   projectileSpeed: 20
   shootingCooldown: 0
   canShoot: 0
@@ -147,7 +148,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 6
+  m_Constraints: 4
 --- !u!95 &85501186584308432
 Animator:
   serializedVersion: 5

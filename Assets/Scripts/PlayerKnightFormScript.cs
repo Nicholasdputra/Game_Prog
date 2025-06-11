@@ -44,6 +44,7 @@ public class PlayerKnightFormScript : MonoBehaviour
             Debug.Log("Sword swing action initiated.");
             animator.SetBool("Deflecting", false); // Set the deflecting animation state
             animator.SetBool("Attacking", true); // Set the attacking animation state
+            AudioManager.instance.PlaySoundEffect(AudioManager.instance.slashSound); // Play sword swing sound effect
             Debug.Log("Attacking animation state set to true.");
             swordSwingCoroutine = StartCoroutine(SwordSwing());
         }
@@ -54,6 +55,7 @@ public class PlayerKnightFormScript : MonoBehaviour
             animator.SetBool("Deflecting", true); // Set the deflecting animation state
             shieldIcon.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.5f);
             isDeflecting = true;
+            AudioManager.instance.PlaySoundEffect(AudioManager.instance.parrySound); // Play deflect sound effect
             canSwingSword = false; // Disable sword swinging while deflecting
         } 
         else

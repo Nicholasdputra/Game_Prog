@@ -64,6 +64,12 @@ public class BasePlayerScript : MonoBehaviour
 
     void Update()
     {
+        if(lives <= 0)
+        {
+            Time.timeScale = 0f; // Stop the game time
+            GameManagerScript.instance.ShowGameOverPanel();
+        }
+
         float moveInput = Input.GetAxisRaw("Horizontal");
         if (Mathf.Abs(rb.velocity.x) < 0.05f)
             rb.velocity = new Vector2(0, rb.velocity.y);
@@ -173,6 +179,7 @@ public class BasePlayerScript : MonoBehaviour
         {
             Debug.Log("Attempting to dash");
             canDash = false; // Disable dashing until cooldown is over
+            AudioManager.instance.PlaySoundEffect(AudioManager.instance.dashSound); // Play dash sound
             dashIcon.fillAmount = 1f; // Reset the ability image fill amount
 
             if (direction == 1 && rb.velocity.x > 0)
@@ -208,6 +215,7 @@ public class BasePlayerScript : MonoBehaviour
             playerKnightFormScript.enabled = true;
             playerKnightFormScript.shieldIcon.SetActive(true); // Enable shield icon
             animator.runtimeAnimatorController = knightAnimatorController;
+            AudioManager.instance.PlaySoundEffect(AudioManager.instance.knightFormSound);
             playerFireFormScript.enabled = false;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2) && playerForm != 1)
@@ -217,6 +225,7 @@ public class BasePlayerScript : MonoBehaviour
             Debug.Log("Switched to Fire Form");
             player.GetComponent<PlayerFireFormScript>().enabled = true;
             animator.runtimeAnimatorController = fireAnimatorController;
+            AudioManager.instance.PlaySoundEffect(AudioManager.instance.fireFormSound);
             playerKnightFormScript.shieldIcon.SetActive(false);
             player.GetComponent<PlayerKnightFormScript>().enabled = false;
         }

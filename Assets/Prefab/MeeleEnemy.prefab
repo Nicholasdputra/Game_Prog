@@ -100,7 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edc274175272c7944ac9c9705bb2ea6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
+  animator: {fileID: 0}
+  health: 3
   rb: {fileID: 0}
   player: {fileID: 0}
   playerScript: {fileID: 0}
@@ -112,11 +113,11 @@ MonoBehaviour:
   maxChaseDistance: 0
   attackRange: 0
   attackCooldown: 0
-  attackWindUp: 0
   attackDamage: 0
   waitBeforeReturn: 0
   returnSpeed: 0
   startingPosition: {x: 0, y: 0}
+  scoreGain: 0
 --- !u!50 &5348526322657016672
 Rigidbody2D:
   serializedVersion: 4

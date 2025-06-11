@@ -9,13 +9,18 @@ public class RangedEnemyScript : EnemyScript
     public int shootingCooldown; // Cooldown time in seconds for firing
     public bool canShoot; // Flag to check if fireball can be fired
 
+    void Awake()
+    {
+        health = 1f; // Health value   
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        health = 1f; // Health value
         animator = GetComponent<Animator>();
         canChase = false; // Initially not chasing the player
         Initialize();
-        health = 1f; // Health value
 
         attackRange = 10f; // Set the attack range for ranged attacks
         attackCooldown = 3f; // Set the cooldown time between attacks

@@ -8,14 +8,19 @@ public class MeeleeEnemyScript : EnemyScript
 {
     // MeeleeEnemyScript inherits from EnemyScript and implements specific behavior for a melee enemy
 
+    void Awake()
+    {
+        health = 3f; // Health value   
+    }
+
     void Start()
     {
+        health = 3f; // Health value
         animator = GetComponent<Animator>();
         canChase = false; // Initially not chasing the player
         Initialize();
-        health = 3f; // Health value
 
-        attackRange = 1.5f; // Set the attack range for melee attacks
+        attackRange = 1.25f; // Set the attack range for melee attacks
         attackCooldown = 1.5f; // Set the cooldown time between attacks
         attackDamage = 1; // Damage dealt by the enemy's attack
 
@@ -60,12 +65,15 @@ public class MeeleeEnemyScript : EnemyScript
 
         // Debug.Log("Melee attack wind-up complete, executing attack");
         // Perform the melee attack logic
-        if (player != null && Vector2.Distance(transform.position, player.transform.position) <= attackRange)
+        if (player != null && Vector2.Distance(transform.position, player.transform.position) <= attackRange
+            && Vector2.Dot((player.transform.position - transform.position).normalized, playerDirection) > 0.5f
+        )
         {
             Debug.Log("Player is within attack range, dealing damage.");
             playerScript.animator.SetTrigger("Hurt"); // Trigger the hit animation on the player
             //Since this is a melee attack, we can directly apply damage to the player
             playerScript.lives -= attackDamage;
+            AudioManager.instance.PlaySoundEffect(AudioManager.instance.hitSound);
         }
         else
         {
